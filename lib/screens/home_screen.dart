@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/provider/map_provider/circle_outline_map_provider.dart';
+import 'package:flutter_map/provider/map_provider/location_provider.dart';
 import 'package:flutter_map/screens/full_map.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,15 +15,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  Completer<GoogleMapController> _controller = Completer();
-  static final CameraPosition _kGooglePlex = const CameraPosition(
+  final Completer<GoogleMapController> _controller = Completer();
+  static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(28.674777410675873, 77.50341320602973),
     zoom: 14,
   );
 
-  TextEditingController _searchController = TextEditingController();
-  LatLng? _selectedLocation;
-
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +29,23 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Google Maps',
-          style: TextStyle(color: Colors.white),
+          'Aqua Predict',
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {},
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person_2_outlined),
+            onPressed: () {},
+          ),
+        ],
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.only(left: 20,right: 20, top: 30,bottom: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -49,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 5,
                       blurRadius: 10,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                   border: Border.all(
@@ -61,21 +71,26 @@ class _HomeScreenState extends State<HomeScreen> {
                  children: [
                    ClipRRect(
                      borderRadius: BorderRadius.circular(20), // Clip map inside rounded corners
-                     child: GoogleMap(
-                       initialCameraPosition: _kGooglePlex,
-                       onMapCreated: (GoogleMapController controller) {
-                       _controller.complete(controller);
-                       },
-                       zoomControlsEnabled: true,
-                       mapToolbarEnabled: true,
-                       mapType: MapType.normal,
-                       onTap: (LatLng position) {
-                       setState(() {
-                        _selectedLocation = position;
-                       });
-                    },
-                  ),
-                ),
+                     child: Consumer2<MapState, LocationState>(
+                       builder: ( context,mapState, locationState, child) {
+                         return GoogleMap(
+                           initialCameraPosition: _kGooglePlex,
+                           onMapCreated: (GoogleMapController controller) {
+                             _controller.complete(controller);
+                           },
+                           zoomControlsEnabled: true,
+                           mapType: MapType.normal,
+                           circles: mapState.circles,
+                           onTap: (LatLng position) {
+
+                               locationState.updateSelectedLocation(position);
+                               mapState.updateCircle(position);
+
+                           },
+                         );
+                       }
+                     ),
+                   ),
                    Positioned(
                      top: 10,
                      left: 10,
@@ -90,22 +105,19 @@ class _HomeScreenState extends State<HomeScreen> {
                              color: Colors.black.withOpacity(0.2),
                              spreadRadius: 2,
                              blurRadius: 5,
-                             offset: Offset(0, 2), // Shadow position
+                             offset: const Offset(0, 2), // Shadow position
                            ),
                          ],
                        ),
                        child: TextField(
                          controller: _searchController,
-                         decoration: InputDecoration(
+                         decoration: const InputDecoration(
                            hintText: 'Search location',
                            border: InputBorder.none,
                            prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
                            contentPadding: EdgeInsets.symmetric(vertical: 15),
                          ),
-                         onSubmitted: (value) {
-                           // Handle search functionality
-                           print("Search for: $value");
-                         },
+                         onSubmitted: (value) {},
                        ),
                      ),
                    ),
@@ -114,14 +126,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     left: 10,
                     child: FloatingActionButton(
                        onPressed: (){
-                         Navigator.push(context, MaterialPageRoute(builder: (context)=>FullScreenMap()));
+                         Navigator.push(context, MaterialPageRoute(builder: (context)=>const FullScreenMap()));
                        },
                        backgroundColor: Colors.white,
-                       child: Icon(
+                       mini: true,
+                       child: const Icon(
                          Icons.fullscreen,
                          color: Colors.blueAccent,
-                       ),
-                    mini: true, // Smaller button size
+                       ), // Smaller button size
                   ),
                 ),
               ],
@@ -129,66 +141,57 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         
               const SizedBox(height: 20),
-        
-              if (_selectedLocation != null) ...[
-                Text(
-                  "Selected Location:",
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "Latitude:",
-                  style: TextStyle(fontSize: 20),
-                ),
-                Container(
-                  color: Colors.white70,
-                  child: Center(
-                      child:
-                         Text("${_selectedLocation!.latitude.toStringAsFixed(6)}",
-                         style: TextStyle(fontSize: 20),),
+
+              Consumer<LocationState>(
+                builder: (context, locationState, child) {
+                  if (locationState.selectedLocation != null) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Selected Location:",
+                          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          "Latitude:",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Container(
+                          color: Colors.white70,
+                          child: Center(
+                            child: Text(
+                              locationState.selectedLocation!.latitude.toStringAsFixed(6),
+                              style: const TextStyle(fontSize: 20),
                             ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "Longitude:",
-                  style: TextStyle(fontSize: 20),
-                ),
-                Container(
-                  color: Colors.white70,
-                  child: Center(
-                    child:
-                    Text("${_selectedLocation!.longitude.toStringAsFixed(6)}",
-                      style: TextStyle(fontSize: 20),),
-                  ),
-                ),
-              ] else
-                Text(
-                  "Tap on the map to select a location.",
-                  style: TextStyle(fontSize: 26, color: Colors.grey),
-                ),
-        
-              const SizedBox(height: 20),
-        
-              ElevatedButton.icon(
-                onPressed: _selectedLocation != null
-                    ? () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        "Location Selected: (${_selectedLocation!.latitude}, ${_selectedLocation!.longitude})",
-                      ),
-                    ),
-                  );
-                }
-                    : null, // Disable button if no location is selected
-                icon: Icon(Icons.location_on),
-                label: Text("Use this location"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _selectedLocation != null
-                      ? Colors.blue
-                      : Colors.grey, // Change button color based on state
-                ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          "Longitude:",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Container(
+                          color: Colors.white70,
+                          child: Center(
+                            child: Text(
+                              locationState.selectedLocation!.longitude.toStringAsFixed(6),
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return const Text(
+                      "Tap on the map to select a location.",
+                      style: TextStyle(fontSize: 26, color: Colors.grey),
+                    );
+                  }
+                },
               ),
+              const SizedBox(height: 20),
+
             ],
           ),
         ),
