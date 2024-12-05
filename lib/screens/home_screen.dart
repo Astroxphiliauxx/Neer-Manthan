@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Completer<GoogleMapController> _controller = Completer();
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(28.674777410675873, 77.50341320602973),
-    zoom: 14,
+    zoom: 10,
   );
 
   final TextEditingController _searchController = TextEditingController();
@@ -26,173 +26,231 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Aqua Predict',
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {},
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person_2_outlined),
-            onPressed: () {},
+    return SafeArea(
+      child: Scaffold(
+
+        appBar: AppBar(
+
+          title: const Text(
+            'Aqua Predict',
           ),
-        ],
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20,right: 20, top: 30,bottom: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.person_2_outlined),
+              onPressed: () {},
+            ),
+          ],
+          centerTitle: true,
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
             children: [
-              // Map Container
-              Container(
-                height: 500,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
+              DrawerHeader(
+                decoration: const BoxDecoration(
+                  color: Colors.blueAccent,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Icon(Icons.water_drop, size: 60, color: Colors.white),
+                    SizedBox(height: 10),
+                    Text(
+                      'Aqua Predict',
+                      style: TextStyle(fontSize: 24, color: Colors.white),
                     ),
                   ],
-                  border: Border.all(
-                    color: Colors.blueAccent,
-                    width: 2,
-                  ),
                 ),
-                child: Stack(
-                 children: [
-                   ClipRRect(
-                     borderRadius: BorderRadius.circular(20), // Clip map inside rounded corners
-                     child: Consumer2<MapState, LocationState>(
-                       builder: ( context,mapState, locationState, child) {
-                         return GoogleMap(
-                           initialCameraPosition: _kGooglePlex,
-                           onMapCreated: (GoogleMapController controller) {
-                             _controller.complete(controller);
-                           },
-                           zoomControlsEnabled: true,
-                           mapType: MapType.normal,
-                           circles: mapState.circles,
-                           onTap: (LatLng position) {
-
-                               locationState.updateSelectedLocation(position);
-                               mapState.updateCircle(position);
-
-                           },
-                         );
-                       }
-                     ),
-                   ),
-                   Positioned(
-                     top: 10,
-                     left: 10,
-                     right: 10,
-                     child: Container(
-                       padding: const EdgeInsets.symmetric(horizontal: 10),
-                       decoration: BoxDecoration(
-                         color: Colors.white,
-                         borderRadius: BorderRadius.circular(30),
-                         boxShadow: [
-                           BoxShadow(
-                             color: Colors.black.withOpacity(0.2),
-                             spreadRadius: 2,
-                             blurRadius: 5,
-                             offset: const Offset(0, 2), // Shadow position
-                           ),
-                         ],
-                       ),
-                       child: TextField(
-                         controller: _searchController,
-                         decoration: const InputDecoration(
-                           hintText: 'Search location',
-                           border: InputBorder.none,
-                           prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
-                           contentPadding: EdgeInsets.symmetric(vertical: 15),
-                         ),
-                         onSubmitted: (value) {},
-                       ),
-                     ),
-                   ),
-                  Positioned(
-                    bottom: 10,
-                    left: 10,
-                    child: FloatingActionButton(
-                       onPressed: (){
-                         Navigator.push(context, MaterialPageRoute(builder: (context)=>const FullScreenMap()));
-                       },
-                       backgroundColor: Colors.white,
-                       mini: true,
-                       child: const Icon(
-                         Icons.fullscreen,
-                         color: Colors.blueAccent,
-                       ), // Smaller button size
-                  ),
-                ),
-              ],
-            ),
-          ),
-        
-              const SizedBox(height: 20),
-
-              Consumer<LocationState>(
-                builder: (context, locationState, child) {
-                  if (locationState.selectedLocation != null) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Selected Location:",
-                          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                          "Latitude:",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        Container(
-                          color: Colors.white70,
-                          child: Center(
-                            child: Text(
-                              locationState.selectedLocation!.latitude.toStringAsFixed(6),
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                          "Longitude:",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        Container(
-                          color: Colors.white70,
-                          child: Center(
-                            child: Text(
-                              locationState.selectedLocation!.longitude.toStringAsFixed(6),
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  } else {
-                    return const Text(
-                      "Tap on the map to select a location.",
-                      style: TextStyle(fontSize: 26, color: Colors.grey),
-                    );
-                  }
+              ),
+              ListTile(
+                leading: const Icon(Icons.home),
+                title: const Text('Home'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
                 },
               ),
-              const SizedBox(height: 20),
-
+              ListTile(
+                leading: const Icon(Icons.map),
+                title: const Text('Full Map View'),
+                onTap: () {
+                  Navigator.pop(context); // Close the drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const FullScreenMap()),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('Settings'),
+                onTap: () {
+                  // Handle settings navigation
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Logout'),
+                onTap: () {
+                  // Handle logout functionality
+                  Navigator.pop(context); // Close the drawer
+                },
+              ),
             ],
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20,right: 20, top: 30,bottom: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Map Container
+                Container(
+                  height: 500,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                    border: Border.all(
+                      color: Colors.blueAccent,
+                      width: 2,
+                    ),
+                  ),
+                  child: Stack(
+                   children: [
+                     ClipRRect(
+                       borderRadius: BorderRadius.circular(20), // Clip map inside rounded corners
+                       child: Consumer2<MapState, LocationState>(
+                         builder: ( context,mapState, locationState, child) {
+                           return GoogleMap(
+                             initialCameraPosition: _kGooglePlex,
+                             onMapCreated: (GoogleMapController controller) {
+                               _controller.complete(controller);
+                             },
+                             zoomControlsEnabled: true,
+                             mapType: MapType.normal,
+                             circles: mapState.circles,
+                             onTap: (LatLng position) {
+
+                                 locationState.updateSelectedLocation(position);
+                                 mapState.updateCircle(position);
+
+                             },
+                           );
+                         }
+                       ),
+                     ),
+                     Positioned(
+                       top: 10,
+                       left: 10,
+                       right: 10,
+                       child: Container(
+                         padding: const EdgeInsets.symmetric(horizontal: 10),
+                         decoration: BoxDecoration(
+                           color: Colors.white,
+                           borderRadius: BorderRadius.circular(30),
+                           boxShadow: [
+                             BoxShadow(
+                               color: Colors.black.withOpacity(0.2),
+                               spreadRadius: 2,
+                               blurRadius: 5,
+                               offset: const Offset(0, 2), // Shadow position
+                             ),
+                           ],
+                         ),
+                         child: TextField(
+                           controller: _searchController,
+                           decoration: const InputDecoration(
+                             hintText: 'Search location',
+                             border: InputBorder.none,
+                             prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
+                             contentPadding: EdgeInsets.symmetric(vertical: 15),
+                           ),
+                           onSubmitted: (value) {},
+                         ),
+                       ),
+                     ),
+                    Positioned(
+                      bottom: 10,
+                      left: 10,
+                      child: FloatingActionButton(
+                         onPressed: (){
+                           Navigator.push(context, MaterialPageRoute(builder: (context)=>const FullScreenMap()));
+                         },
+                         backgroundColor: Colors.white,
+                         mini: true,
+                         child: const Icon(
+                           Icons.fullscreen,
+                           color: Colors.blueAccent,
+                         ), // Smaller button size
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+                const SizedBox(height: 20),
+
+                Consumer<LocationState>(
+                  builder: (context, locationState, child) {
+                    if (locationState.selectedLocation != null) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Selected Location:",
+                            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 5),
+                          const Text(
+                            "Latitude:",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Container(
+                            color: Colors.black12,
+                            child: Center(
+                              child: Text(
+                                locationState.selectedLocation!.latitude.toStringAsFixed(6),
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          const Text(
+                            "Longitude:",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          Container(
+                            color: Colors.black12,
+                            child: Center(
+                              child: Text(
+                                locationState.selectedLocation!.longitude.toStringAsFixed(6),
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const Text(
+                        "Tap on the map to select a location.",
+                        style: TextStyle(fontSize: 26, color: Colors.grey),
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(height: 20),
+
+              ],
+            ),
           ),
         ),
       ),

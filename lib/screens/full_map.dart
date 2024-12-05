@@ -19,12 +19,10 @@ class _FullScreenMapState extends State<FullScreenMap> {
     zoom: 14,
   );
 
-  Set<Circle> _circles = {}; // To hold the circle to be drawn on the map.
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text("Map"),
         centerTitle: true,
