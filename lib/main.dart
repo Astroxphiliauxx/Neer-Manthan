@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/authentication/loginScreen.dart';
+import 'package:flutter_map/authentication/login_screen.dart';
 import 'package:flutter_map/provider/map_provider/circle_outline_map_provider.dart';
 import 'package:flutter_map/provider/map_provider/location_provider.dart';
 import 'package:flutter_map/provider/theme_provider.dart';
@@ -7,7 +7,7 @@ import 'package:flutter_map/screens/route_not_found_screen.dart';
 import 'package:flutter_map/screens/splash_screen.dart';
 import 'package:flutter_map/screens/theme_selector.dart';
 import 'package:provider/provider.dart';
-import 'authentication/signUpScreen.dart';
+import 'authentication/sign_up_screen.dart';
 import 'screens/home_screen.dart';
 
 void main() {

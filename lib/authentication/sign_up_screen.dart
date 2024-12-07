@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../common_widgets/CustomButton.dart';
-import '../common_widgets/CustomTextForm.dart';
+import '../common_widgets/custom_button.dart';
+import '../common_widgets/custom_text_form.dart';
 
 class signUpScreen extends StatefulWidget {
   @override
