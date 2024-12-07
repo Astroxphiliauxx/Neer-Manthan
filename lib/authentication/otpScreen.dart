@@ -1,7 +1,5 @@
-import'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
-
-
 
 class otpScreen extends StatefulWidget {
   const otpScreen({super.key});
@@ -14,55 +12,142 @@ class _otpScreenState extends State<otpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
+        // fit: StackFit.expand,
         children: [
-        Padding(
-          padding: const EdgeInsets.only(top:180,left:10,right:10),
-          child: Pinput(
-            length: 6,
-            defaultPinTheme: PinTheme(
-              width: 56,
-              height: 56,
-              textStyle: TextStyle(fontSize: 20, color: Colors.black),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.grey),
-              )),
-                    focusedPinTheme: PinTheme(
-                      width: 56,
-                      height: 56,
-                      textStyle: TextStyle(fontSize: 20, color: Colors.blue),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.blue),
-                      ),
+          // Background Image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/RECTANGLE.jpg"),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // Content
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 80), // Spacing from top
+                  const Text(
+                    'Verify your phone',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    submittedPinTheme: PinTheme(
-                      width: 56,
-                      height: 56,
-                      textStyle: TextStyle(fontSize: 20, color: Colors.green),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.green),
-                      ),
-                    ),
-                    errorPinTheme: PinTheme(
-                      width: 56,
-                      height: 56,
-                      textStyle: TextStyle(fontSize: 20, color: Colors.red),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.red),
-                      ),
-                    ),
-            keyboardType:  TextInputType.number,
+                    textAlign: TextAlign.center,
                   ),
+                  const Text(
+                    'number',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    ' We’ve sent an SMS with an ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xB3FFFFFF),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const Text(
+                    '       activation code to your number',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xB3FFFFFF),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const Text(
+                    '+91276583639',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xB3FFFFFF),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20,right:20),
+                    child: Pinput(
+                      length: 4,
+                      defaultPinTheme: PinTheme(
+                        width: 71,
+                        height: 61,
+                        textStyle: const TextStyle(fontSize: 20, color: Colors.white),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                      ),
+                      focusedPinTheme: PinTheme(
+                        width: 71,
+                        height: 58,
+                        textStyle: const TextStyle(fontSize: 20, color: Colors.white),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.blue),
+                        ),
+                      ),
+                      submittedPinTheme: PinTheme(
+                        width: 71,
+                        height: 61,
+                        textStyle: const TextStyle(fontSize: 20, color: Colors.green),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.green),
+                        ),
+                      ),
+                      errorPinTheme: PinTheme(
+                        width: 71,
+                        height: 61,
+                        textStyle: const TextStyle(fontSize: 20, color: Colors.red),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.red),
+                        ),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('I didn\'t receive a code',style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xB3FFFFFF),
+                      ),
+                      ),
+                      TextButton(onPressed:(){
+                        //resend code
 
+                      }, child: Text('Resend',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color:Color(0xFFFFFFFF)
+                      ),),
+                      )
 
-        )
+                    ],
+                  )
 
+                ],
+              ),
+            ),
+          ),
         ],
-
       ),
     );
   }

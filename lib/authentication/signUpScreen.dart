@@ -12,7 +12,7 @@ class signUpScreen extends StatefulWidget {
 
 class _signUpScreenState extends State<signUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController phonenumberController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
@@ -34,7 +34,7 @@ class _signUpScreenState extends State<signUpScreen> {
 
       final url = Uri.parse('http://127.0.0.1:8000/user/');
       final body = jsonEncode({
-        'phone_number': phonenumberController.text,
+        'phone_number': phoneNumberController.text,
         'email': emailController.text,
         'password1': passwordController.text,
         'password2': confirmPasswordController.text,
@@ -96,16 +96,13 @@ class _signUpScreenState extends State<signUpScreen> {
 
                   // Phone Number Input
                   CustomTextFormField(
-                    controller: phonenumberController,
+                    controller: phoneNumberController,
                     labelText: "Phone No.",
                     onChanged: (value){},
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Please enter 10 digit Phone Number";
-                        setState(() {
-
-                        });
                       }
                       return null;
                     },

@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/provider/map_provider/circle_outline_map_provider.dart';
-import 'package:flutter_map/provider/map_provider/location_provider.dart';
-import 'package:flutter_map/screens/full_map.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_map/screens/full_map.dart';
+import 'package:flutter_map/provider/map_provider/location_provider.dart';
+
+import '../provider/map_provider/circle_outline_map_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final Completer<GoogleMapController> _controller = Completer();
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(28.674777410675873, 77.50341320602973),
@@ -25,15 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
-
         appBar: AppBar(
-
-          title: const Text(
-            'Aqua Predict',
-          ),
+          title: const Text('Aqua Predict'),
           actions: [
             IconButton(
               icon: const Icon(Icons.person_2_outlined),
@@ -84,8 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: const Icon(Icons.settings),
                 title: const Text('Settings'),
                 onTap: () {
-                  // Handle settings navigation
-                  Navigator.pop(context); // Close the drawer
+                  Navigator.pushNamed((context), '/theme');
+
                 },
               ),
               const Divider(),
@@ -93,7 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: const Icon(Icons.logout),
                 title: const Text('Logout'),
                 onTap: () {
-                  // Handle logout functionality
                   Navigator.pop(context); // Close the drawer
                 },
               ),
@@ -102,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(left: 20,right: 20, top: 30,bottom: 30),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -125,80 +119,81 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   child: Stack(
-                   children: [
-                     ClipRRect(
-                       borderRadius: BorderRadius.circular(20), // Clip map inside rounded corners
-                       child: Consumer2<MapState, LocationState>(
-                         builder: ( context,mapState, locationState, child) {
-                           return GoogleMap(
-                             initialCameraPosition: _kGooglePlex,
-                             onMapCreated: (GoogleMapController controller) {
-                               _controller.complete(controller);
-                             },
-                             zoomControlsEnabled: true,
-                             mapType: MapType.normal,
-                             circles: mapState.circles,
-                             onTap: (LatLng position) {
-
-                                 locationState.updateSelectedLocation(position);
-                                 mapState.updateCircle(position);
-
-                             },
-                           );
-                         }
-                       ),
-                     ),
-                     Positioned(
-                       top: 10,
-                       left: 10,
-                       right: 10,
-                       child: Container(
-                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                         decoration: BoxDecoration(
-                           color: Colors.white,
-                           borderRadius: BorderRadius.circular(30),
-                           boxShadow: [
-                             BoxShadow(
-                               color: Colors.black.withOpacity(0.2),
-                               spreadRadius: 2,
-                               blurRadius: 5,
-                               offset: const Offset(0, 2), // Shadow position
-                             ),
-                           ],
-                         ),
-                         child: TextField(
-                           controller: _searchController,
-                           decoration: const InputDecoration(
-                             hintText: 'Search location',
-                             border: InputBorder.none,
-                             prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
-                             contentPadding: EdgeInsets.symmetric(vertical: 15),
-                           ),
-                           onSubmitted: (value) {},
-                         ),
-                       ),
-                     ),
-                    Positioned(
-                      bottom: 10,
-                      left: 10,
-                      child: FloatingActionButton(
-                         onPressed: (){
-                           Navigator.push(context, MaterialPageRoute(builder: (context)=>const FullScreenMap()));
-                         },
-                         backgroundColor: Colors.white,
-                         mini: true,
-                         child: const Icon(
-                           Icons.fullscreen,
-                           color: Colors.blueAccent,
-                         ), // Smaller button size
-                    ),
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20), // Clip map inside rounded corners
+                        child: Consumer2<MapState, LocationState>(
+                          builder: (context, mapState, locationState, child) {
+                            return GoogleMap(
+                              initialCameraPosition: _kGooglePlex,
+                              onMapCreated: (GoogleMapController controller) {
+                                _controller.complete(controller);
+                              },
+                              zoomControlsEnabled: true,
+                              mapType: MapType.normal,
+                              circles: mapState!.circles,
+                              onTap: (LatLng position) {
+                                locationState.updateSelectedLocation(position);
+                                mapState?.updateCircle(position);
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      Positioned(
+                        top: 10,
+                        left: 10,
+                        right: 10,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 2), // Shadow position
+                              ),
+                            ],
+                          ),
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: const InputDecoration(
+                              hintText: 'Search location',
+                              border: InputBorder.none,
+                              prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
+                              contentPadding: EdgeInsets.symmetric(vertical: 15),
+                            ),
+                            onSubmitted: (value) {},
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        left: 10,
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const FullScreenMap()),
+                            );
+                          },
+                          backgroundColor: Colors.white,
+                          mini: true,
+                          child: const Icon(
+                            Icons.fullscreen,
+                            color: Colors.blueAccent,
+                          ), // Smaller button size
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-
+                ),
                 const SizedBox(height: 20),
 
+                // Display selected location details
                 Consumer<LocationState>(
                   builder: (context, locationState, child) {
                     if (locationState.selectedLocation != null) {
@@ -248,7 +243,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
                 const SizedBox(height: 20),
-
               ],
             ),
           ),
