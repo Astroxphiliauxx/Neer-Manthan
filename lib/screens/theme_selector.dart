@@ -10,17 +10,13 @@ class ThemeSelector extends StatefulWidget {
 }
 
 class _ThemeSelectorState extends State<ThemeSelector> {
-  bool isLightMode = true;
-
   @override
   Widget build(BuildContext context) {
     final themeChanger = Provider.of<ThemeProvider>(context);
-
-    isLightMode = themeChanger.themeMode == ThemeMode.light;
+    bool isLightMode = themeChanger.themeMode == ThemeMode.light;
 
     return Scaffold(
       appBar: AppBar(
-
         title: const Text(
           "Select Theme",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
@@ -34,7 +30,7 @@ class _ThemeSelectorState extends State<ThemeSelector> {
         duration: const Duration(milliseconds: 800),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: themeChanger.themeMode == ThemeMode.light
+            colors: isLightMode
                 ? [Colors.blue.shade100, Colors.blue.shade400]
                 : [Colors.grey.shade900, Colors.black87],
             begin: Alignment.topLeft,
@@ -45,35 +41,8 @@ class _ThemeSelectorState extends State<ThemeSelector> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              RadioListTile<ThemeMode>(
-                title: const Text(
-                  "Light Mode",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-                value: ThemeMode.light,
-                groupValue: themeChanger.themeMode,
-                onChanged: (value) {
-                  themeChanger.setTheme(value!);
-                  setState(() {
-                    isLightMode = true;
-                  });
-                },
-              ),
-              RadioListTile<ThemeMode>(
-                title: const Text(
-                  "Dark Mode",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-                value: ThemeMode.dark,
-                groupValue: themeChanger.themeMode,
-                onChanged: (value) {
-                  themeChanger.setTheme(value!);
-                  setState(() {
-                    isLightMode = false;
-                  });
-                },
-              ),
-              const SizedBox(height: 30),
+
+
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 500),
                 transitionBuilder: (child, animation) {
@@ -82,7 +51,7 @@ class _ThemeSelectorState extends State<ThemeSelector> {
                 child: Icon(
                   isLightMode ? Icons.wb_sunny : Icons.nights_stay,
                   key: ValueKey(isLightMode),
-                  size: 60,
+                  size: 70,
                   color: isLightMode ? Colors.orange : Colors.blueGrey,
                 ),
               ),
@@ -94,7 +63,33 @@ class _ThemeSelectorState extends State<ThemeSelector> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: isLightMode ? Colors.orange.shade800 : Colors.grey.shade300,
+                  color: isLightMode
+                      ? Colors.orange.shade800
+                      : Colors.grey.shade300,
+                ),
+              ),
+              const SizedBox(height: 60),
+              ElevatedButton(
+                onPressed: () {
+                  themeChanger.setTheme(
+                      isLightMode ? ThemeMode.dark : ThemeMode.light);
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 30, vertical: 15),
+                  backgroundColor: isLightMode
+                      ? Colors.white
+                      : Colors.blueGrey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: Text(
+                  isLightMode ? "Switch to Dark Mode" : "Switch to Light Mode",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
