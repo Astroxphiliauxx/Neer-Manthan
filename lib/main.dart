@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/authentication/loginScreen.dart';
-import 'package:flutter_map/authentication/otpScreen.dart';
 import 'package:flutter_map/provider/map_provider/circle_outline_map_provider.dart';
 import 'package:flutter_map/provider/map_provider/location_provider.dart';
 import 'package:flutter_map/provider/theme_provider.dart';
+import 'package:flutter_map/screens/route_not_found_screen.dart';
 import 'package:flutter_map/screens/splash_screen.dart';
 import 'package:flutter_map/screens/theme_selector.dart';
 import 'package:provider/provider.dart';
@@ -29,45 +29,48 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Builder(
-        builder: (context) {
-          final themeChanger= Provider.of<ThemeProvider>(context);
-          return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              themeMode: themeChanger.themeMode,
-              theme: ThemeData(
-                  scaffoldBackgroundColor: Colors.white,
-                  primarySwatch: Colors.blue,
-                  brightness: Brightness.light,
-                  appBarTheme: AppBarTheme(
-                      color: Colors.blueAccent,
-                      titleTextStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25
-                      ),
-                      iconTheme: IconThemeData(color: Colors.white)
-                  ),
-                  iconTheme: IconThemeData(color: Colors.white),
-                  textTheme: TextTheme()
+      builder: (context) {
+        final themeChanger= Provider.of<ThemeProvider>(context);
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          themeMode: themeChanger.themeMode,
+          theme: ThemeData(
+              scaffoldBackgroundColor: Colors.white,
+              primarySwatch: Colors.blue,
+              brightness: Brightness.light,
+              appBarTheme: AppBarTheme(
+                color: Colors.blueAccent,
+                titleTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25
+                ),
+                iconTheme: IconThemeData(color: Colors.white)
               ),
+              iconTheme: IconThemeData(color: Colors.white),
+              textTheme: TextTheme()
+           ),
+          darkTheme: ThemeData(
+              brightness: Brightness.dark,
+              scaffoldBackgroundColor: Colors.black54,
+              appBarTheme: const AppBarTheme(color: Colors.blueAccent),
+              iconTheme: const IconThemeData(color: Colors.pink)
+          ),
+          initialRoute: '/',
+          routes: {
+              '/':(context)=>const splashScreen(),
+              '/signUp':(context)=>signUpScreen(),
+              '/login':(context)=>const LoginScreen(),
+              '/home':(context)=>const HomeScreen(),
+              '/theme': (context)=> const ThemeSelector(),
 
-              darkTheme: ThemeData(
-                  brightness: Brightness.dark,
-                  scaffoldBackgroundColor: Colors.black,
-                  appBarTheme: const AppBarTheme(color: Colors.blueAccent),
-                  iconTheme: const IconThemeData(color: Colors.pink)
-              ),
+          },
+          onUnknownRoute: (settings) => MaterialPageRoute(
+            builder: (context) => RouteNotFoundScreen(),
+          ),
 
-              initialRoute: '/',
-              routes: {
-                '/':(context)=>const splashScreen(),
-                '/signUp':(context)=>signUpScreen(),
-                '/login':(context)=>const LoginScreen(),
-                '/home':(context)=>const HomeScreen(),
-                '/theme': (context)=> const ThemeSelector(),
-
-              }
-          );
-        }
+        );
+      }
     );
   }
 }
+
