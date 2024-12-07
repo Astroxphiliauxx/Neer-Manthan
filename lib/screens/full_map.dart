@@ -68,6 +68,4 @@ class _FullScreenMapState extends State<FullScreenMap> {
       ),
     );
   }
-
-
 }
