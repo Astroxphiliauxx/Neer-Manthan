@@ -16,7 +16,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _kGooglePlex = const CameraPosition(
     target: LatLng(28.674777410675873, 77.50341320602973),
-    zoom: 14,
+    zoom: 10,
   );
 
 
@@ -52,7 +52,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
               left: 10,
               child: FloatingActionButton(
                 onPressed: () {
-                  // Navigate back to HomeScreen
+
                   Navigator.pop(context);
                 },
                 backgroundColor: Colors.white,
