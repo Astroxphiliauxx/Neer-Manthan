@@ -4,7 +4,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map/screens/full_map.dart';
 import 'package:flutter_map/provider/map_provider/location_provider.dart';
-
 import '../provider/map_provider/circle_outline_map_provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,76 +24,79 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Aqua Predict'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.person_2_outlined),
-              onPressed: () {},
+    return Scaffold(
+      
+      appBar: AppBar(
+        title: const Text('Aqua Predict'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person_2_outlined),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/profile');
+            },
+          ),
+        ],
+        centerTitle: true,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.blueAccent,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Icon(Icons.water_drop, size: 60, color: Colors.white),
+                  SizedBox(height: 10),
+                  Text(
+                    'Aqua Predict',
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.map),
+              title: const Text('Full Map View'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const FullScreenMap()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pushNamed((context), '/theme');
+    
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+              },
             ),
           ],
-          centerTitle: true,
         ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                decoration: const BoxDecoration(
-                  color: Colors.blueAccent,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Icon(Icons.water_drop, size: 60, color: Colors.white),
-                    SizedBox(height: 10),
-                    Text(
-                      'Aqua Predict',
-                      style: TextStyle(fontSize: 24, color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.home),
-                title: const Text('Home'),
-                onTap: () {
-                  Navigator.pop(context); // Close the drawer
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.map),
-                title: const Text('Full Map View'),
-                onTap: () {
-                  Navigator.pop(context); // Close the drawer
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const FullScreenMap()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings),
-                title: const Text('Settings'),
-                onTap: () {
-                  Navigator.pushNamed((context), '/theme');
-
-                },
-              ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Logout'),
-                onTap: () {
-                  Navigator.pop(context); // Close the drawer
-                },
-              ),
-            ],
-          ),
-        ),
-        body: SingleChildScrollView(
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 30),
             child: Column(
@@ -192,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-
+            
                 // Display selected location details
                 Consumer<LocationState>(
                   builder: (context, locationState, child) {

@@ -3,6 +3,7 @@ import 'package:flutter_map/authentication/loginScreen.dart';
 import 'package:flutter_map/provider/map_provider/circle_outline_map_provider.dart';
 import 'package:flutter_map/provider/map_provider/location_provider.dart';
 import 'package:flutter_map/provider/theme_provider.dart';
+import 'package:flutter_map/screens/route_not_found_screen.dart';
 import 'package:flutter_map/screens/splash_screen.dart';
 import 'package:flutter_map/screens/theme_selector.dart';
 import 'package:provider/provider.dart';
@@ -48,23 +49,25 @@ class MyApp extends StatelessWidget {
               iconTheme: IconThemeData(color: Colors.white),
               textTheme: TextTheme()
            ),
-
           darkTheme: ThemeData(
               brightness: Brightness.dark,
-              scaffoldBackgroundColor: Colors.black,
+              scaffoldBackgroundColor: Colors.black54,
               appBarTheme: const AppBarTheme(color: Colors.blueAccent),
               iconTheme: const IconThemeData(color: Colors.pink)
           ),
-
-            initialRoute: '/',
-            routes: {
+          initialRoute: '/',
+          routes: {
               '/':(context)=>const splashScreen(),
               '/signUp':(context)=>signUpScreen(),
               '/login':(context)=>const LoginScreen(),
               '/home':(context)=>const HomeScreen(),
               '/theme': (context)=> const ThemeSelector(),
 
-            }
+          },
+          onUnknownRoute: (settings) => MaterialPageRoute(
+            builder: (context) => RouteNotFoundScreen(),
+          ),
+
         );
       }
     );
