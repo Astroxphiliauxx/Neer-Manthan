@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/authentication/loginScreen.dart';
+import 'package:flutter_map/authentication/otpScreen.dart';
+import 'package:flutter_map/features/theme.dart';
 import 'package:flutter_map/provider/map_provider/circle_outline_map_provider.dart';
 import 'package:flutter_map/provider/map_provider/location_provider.dart';
 import 'package:flutter_map/screens/splash_screen.dart';
@@ -25,31 +27,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-          scaffoldBackgroundColor: Colors.white,
-          primarySwatch: Colors.blue,
-          brightness: Brightness.light,
-          appBarTheme: AppBarTheme(
-            color: Colors.blueAccent,
-            titleTextStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 25
-            ),
-            iconTheme: IconThemeData(color: Colors.white)
-          ),
-          iconTheme: IconThemeData(color: Colors.white),
-          textTheme: TextTheme()
-       ),
 
-      darkTheme: ThemeData(
-          brightness: Brightness.dark,
-          appBarTheme: const AppBarTheme(color: Colors.teal),
-          iconTheme: const IconThemeData(color: Colors.pink)
-      ),
-
+        themeMode: ThemeMode.light,
         initialRoute: '/',
         routes: {
-          '/':(context)=>const splashScreen(),
+          '/':(context)=>const otpScreen(),
           '/signUp':(context)=>signUpScreen(),
           '/login':(context)=>const LoginScreen(),
           '/home':(context)=>const HomeScreen(),
