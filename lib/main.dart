@@ -3,6 +3,7 @@ import 'package:flutter_map/authentication/login_screen.dart';
 import 'package:flutter_map/provider/map_provider/circle_outline_map_provider.dart';
 import 'package:flutter_map/provider/map_provider/location_provider.dart';
 import 'package:flutter_map/provider/theme_provider.dart';
+import 'package:flutter_map/screens/full_map.dart';
 import 'package:flutter_map/screens/route_not_found_screen.dart';
 import 'package:flutter_map/screens/splash_screen.dart';
 import 'package:flutter_map/screens/theme_selector.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
               '/login':(context)=>const LoginScreen(),
               '/home':(context)=>const HomeScreen(),
               '/theme': (context)=> const ThemeSelector(),
+              '/fullMap': (context)=> const FullScreenMap(),
 
           },
           onUnknownRoute: (settings) => MaterialPageRoute(

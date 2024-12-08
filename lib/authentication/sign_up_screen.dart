@@ -186,7 +186,9 @@ class _signUpScreenState extends State<signUpScreen> {
                         child: const Text('Already have an account? Log in'),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/term&conditions');
+                        },
                         child: const Text(
                           'Terms and conditions',
                           style: TextStyle(
