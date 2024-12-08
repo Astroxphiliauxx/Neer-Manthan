@@ -34,28 +34,28 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
               debugShowCheckedModeBanner: false,
               themeMode: themeChanger.themeMode,
-              theme: ThemeData(
-                  scaffoldBackgroundColor: Colors.white,
-                  primarySwatch: Colors.blue,
-                  brightness: Brightness.light,
-                  appBarTheme: AppBarTheme(
-                      color: Colors.blueAccent,
-                      titleTextStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25
-                      ),
-                      iconTheme: IconThemeData(color: Colors.white)
-                  ),
-                  iconTheme: IconThemeData(color: Colors.white),
-                  textTheme: TextTheme()
-              ),
-
-              darkTheme: ThemeData(
-                  brightness: Brightness.dark,
-                  scaffoldBackgroundColor: Colors.black,
-                  appBarTheme: const AppBarTheme(color: Colors.blueAccent),
-                  iconTheme: const IconThemeData(color: Colors.pink)
-              ),
+              // theme: ThemeData(
+              //     scaffoldBackgroundColor: Colors.white,
+              //     primarySwatch: Colors.blue,
+              //     brightness: Brightness.light,
+              //     appBarTheme: AppBarTheme(
+              //         color: Colors.blueAccent,
+              //         titleTextStyle: TextStyle(
+              //             color: Colors.white,
+              //             fontSize: 25
+              //         ),
+              //         iconTheme: IconThemeData(color: Colors.white)
+              //     ),
+              //     iconTheme: IconThemeData(color: Colors.white),
+              //     textTheme: TextTheme()
+              // ),
+              //
+              // darkTheme: ThemeData(
+              //     brightness: Brightness.dark,
+              //     scaffoldBackgroundColor: Colors.black,
+              //     appBarTheme: const AppBarTheme(color: Colors.blueAccent),
+              //     iconTheme: const IconThemeData(color: Colors.pink)
+              // ),
 
               initialRoute: '/',
               routes: {

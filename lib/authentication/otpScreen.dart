@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/common_widgets/CustomButton.dart';
 import 'package:pinput/pinput.dart';
 
 class otpScreen extends StatefulWidget {
@@ -138,10 +139,13 @@ class _otpScreenState extends State<otpScreen> {
                         fontSize: 14,
                         color:Color(0xFFFFFFFF)
                       ),),
-                      )
+                      ),
 
                     ],
-                  )
+                  ),
+                  Custombutton(text: 'Verify',onPressed: (){
+
+                  },)
 
                 ],
               ),
