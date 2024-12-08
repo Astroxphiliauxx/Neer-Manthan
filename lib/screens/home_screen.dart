@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map/screens/full_map.dart';
@@ -245,9 +246,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   title: Text(_placesList[index]['description']),
-                                  onTap: () {
+                                  onTap: () async{
                                     print("Selected location: ${_placesList[index]['description']}");
                                     _searchController.text = _placesList[index]['description'];
+                                    List<Location> locations= await locationFromAddress(_placesList[index]['description']);
+                                    print(locations.last.latitude);
+                                    print(locations.last.longitude);
                                   },
                                 );
                               },
