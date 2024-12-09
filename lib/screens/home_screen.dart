@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map/screens/full_map.dart';
@@ -30,7 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<dynamic> _placesList= [];
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -52,6 +50,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void getSuggestion(String input) async{
     String kPLACES_API_KEY= "AIzaSyCvv6_VkZFnr7VKmX6lkF9-wOCLPPd5-7o";
     String baseURL ='https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    String baseURL1= 'https://maps.googleapis.com/maps/api/geocode/json';
+    String encodedAddress = Uri.encodeComponent(input);
+    String request1= '$baseURL1?address=$encodedAddress&key=$kPLACES_API_KEY';
 
     String request = '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_SessionToken';
 
@@ -59,6 +60,10 @@ class _HomeScreenState extends State<HomeScreen> {
       var response = await http.get(Uri.parse(request));
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
+
+      var response1= await http.get(Uri.parse(request1));
+      print('Response1 status: ${response1.statusCode}');
+      print('Response1 body: ${response1.body}');
 
       if (response.statusCode == 200) {
         setState(() {
@@ -249,9 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onTap: () async{
                                     print("Selected location: ${_placesList[index]['description']}");
                                     _searchController.text = _placesList[index]['description'];
-                                    List<Location> locations= await locationFromAddress(_placesList[index]['description']);
-                                    print(locations.last.latitude);
-                                    print(locations.last.longitude);
+
                                   },
                                 );
                               },
