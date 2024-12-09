@@ -13,7 +13,7 @@ class Custombutton extends StatelessWidget {
       child: ElevatedButton(
         style: ButtonStyle(
 
-            backgroundColor:WidgetStatePropertyAll(Color(0xFF1E6091)) ,
+            backgroundColor:WidgetStatePropertyAll(Color(0xFF82C6F8)) ,
             shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(
                   borderRadius:BorderRadius.circular(10),
@@ -26,7 +26,7 @@ class Custombutton extends StatelessWidget {
             text,
             style: TextStyle(
                 fontFamily: 'Poppins',
-                color: Colors.white,
+                color: Colors.black,
                 fontWeight: FontWeight.w700,
                 fontSize: 20),
           ),

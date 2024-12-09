@@ -218,10 +218,35 @@ class _HomeScreenState extends State<HomeScreen> {
                               prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
                               contentPadding: EdgeInsets.symmetric(vertical: 15),
                             ),
-                            onSubmitted: (value) {},
-                          ),
-                        ),
-                      ), //search bar
+
+                            onSubmitted: (value) async {
+
+                                if (value.isNotEmpty) {
+                                  try {
+                                    // Fetch the location based on the submitted value
+                                    List<Location> locations = await locationFromAddress(value);
+                                    if (locations.isNotEmpty) {
+                                      Location selectedLocation = locations.first;
+
+                                      // Update search text
+                                      _searchController.text = value;
+
+                                      // Update location using state management
+                                      context.read<LocationState>().updateSelectedLocation(
+                                        LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                                      );
+
+                                      print("Submitted Location: Latitude: ${selectedLocation.latitude}, Longitude: ${selectedLocation.longitude}");
+                                    }
+                                  } catch (e) {
+                                    print("Error fetching location: $e");
+                                  }
+                                }
+
+
+
+                            },),
+                               ) ), //search bar
 
                       if (_placesList != null && _placesList.isNotEmpty)
                         Positioned(
@@ -247,11 +272,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return ListTile(
                                   title: Text(_placesList[index]['description']),
                                   onTap: () async{
+
                                     print("Selected location: ${_placesList[index]['description']}");
                                     _searchController.text = _placesList[index]['description'];
                                     List<Location> locations= await locationFromAddress(_placesList[index]['description']);
                                     print(locations.last.latitude);
                                     print(locations.last.longitude);
+                                    setState(() {
+                                      _placesList.clear();
+                                    });
                                   },
                                 );
                               },
