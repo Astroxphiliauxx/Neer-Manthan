@@ -27,34 +27,42 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final TextEditingController _searchController = TextEditingController();
   var uuid = Uuid();
-  String _SessionToken=  '112233';
+  late String _sessionToken=  "112233";
 
   List<dynamic> _placesList= [];
 
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _searchController.addListener((){
       onChange();
     });
   }
 
-  void onChange(){
-    if(_SessionToken==null){
+  void onChange() {
+    if (_searchController.text.isEmpty) {
       setState(() {
-        _SessionToken=uuid.v4();
+        _placesList.clear();
+      });
+      return;
+    }
+
+    if (_sessionToken == "") {
+      setState(() {
+        _sessionToken = uuid.v4();
       });
     }
+
     getSuggestion(_searchController.text);
   }
+
 
   void getSuggestion(String input) async{
     String kPLACES_API_KEY= "AIzaSyCvv6_VkZFnr7VKmX6lkF9-wOCLPPd5-7o";
     String baseURL ='https://maps.googleapis.com/maps/api/place/autocomplete/json';
 
-    String request = '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_SessionToken';
+    String request = '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
 
     try {
       var response = await http.get(Uri.parse(request));
@@ -75,8 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mapState = Provider.of<MapState>(context);
+    final locationState = Provider.of<LocationState>(context);
+
     return Scaffold(
-      //cool
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -116,14 +126,14 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: const Icon(Icons.home),
               title: const Text('Home'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
+                Navigator.pop(context);
               },
             ),
             ListTile(
               leading: const Icon(Icons.map),
               title: const Text('Full Map View'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const FullScreenMap()),
@@ -135,7 +145,6 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Settings'),
               onTap: () {
                 Navigator.pushNamed((context), '/theme');
-
               },
             ),
             const Divider(),
@@ -143,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () {
-                Navigator.pop(context); // Close the drawer
+                Navigator.pop(context);
               },
             ),
           ],
@@ -181,87 +190,75 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                            child: Consumer2<MapState, LocationState>(
-                              builder: (context, mapState, locationState, child) {
-                                return GoogleMap(
-                                  initialCameraPosition: _kGooglePlex,
-                                  onMapCreated: (GoogleMapController controller) {
-                                    _controller.complete(controller);
-                                  },
-                                  zoomControlsEnabled: true,
-                                  mapType: MapType.normal,
-                                  circles: mapState!.circles,
-                                  onTap: (LatLng position) {
-                                    locationState.updateSelectedLocation(position);
-                                    mapState?.updateCircle(position);
-                                  },
-                                );
+                            child: GoogleMap(
+                              initialCameraPosition: _kGooglePlex,
+                              onMapCreated: (GoogleMapController controller) {
+                                _controller.complete(controller);
+                              },
+                              zoomControlsEnabled: true,
+                              mapType: MapType.normal,
+                              circles: mapState.circles,
+                              onTap: (LatLng position) {
+                                locationState.updateSelectedLocation(position);
+                                mapState.updateCircle(position);
                               },
                             ),
                           ),
                           Positioned(
-                              top: 10,
-                              left: 10,
-                              right: 10,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 5,
-                                      offset: const Offset(0, 2), // Shadow position
-                                    ),
-                                  ],
-                                ),
-                                child: TextField(
-                                  controller: _searchController,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Search location',
-                                    border: InputBorder.none,
-                                    prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
-                                    contentPadding: EdgeInsets.symmetric(vertical: 15),
+                            top: 10,
+                            left: 10,
+                            right: 10,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 2),
                                   ),
-
-                                  onSubmitted: (value) async {
-
-                                    if (value.isNotEmpty) {
-                                      try {
-                                        // Fetch the location based on the submitted value
-                                        List<Location> locations = await locationFromAddress(value);
-                                        if (locations.isNotEmpty) {
-                                          Location selectedLocation = locations.first;
-
-                                          // Update search text
-                                          _searchController.text = value;
-
-                                          // Update location using state management
-                                          context.read<LocationState>().updateSelectedLocation(
-                                            LatLng(selectedLocation.latitude, selectedLocation.longitude),
-                                          );
-
-                                          print("Submitted Location: Latitude: ${selectedLocation.latitude}, Longitude: ${selectedLocation.longitude}");
-                                        }
-                                      } catch (e) {
-                                        print("Error fetching location: $e");
+                                ],
+                              ),
+                              child: TextField(
+                                controller: _searchController,
+                                decoration: const InputDecoration(
+                                  hintText: 'Search location',
+                                  border: InputBorder.none,
+                                  prefixIcon: Icon(Icons.search, color: Colors.blueAccent),
+                                  contentPadding: EdgeInsets.symmetric(vertical: 15),
+                                ),
+                                onSubmitted: (value) async {
+                                  if (value.isNotEmpty) {
+                                    try {
+                                      List<Location> locations = await locationFromAddress(value);
+                                      if (locations.isNotEmpty) {
+                                        Location selectedLocation = locations.first;
+                                        _searchController.text = value;
+                                        locationState.updateSelectedLocation(
+                                          LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                                        );
                                       }
+                                    } catch (e) {
+                                      print("Error fetching location: $e");
                                     }
-
-                                  },),
-                              ) ), //search bar
-
-                          if (_placesList != null && _placesList.isNotEmpty)
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                          // Place Suggestions List
+                          if (_placesList.isNotEmpty)
                             Positioned(
-                              top: 70, // Adjust this to match the height of the search bar plus padding
+                              top: 70,
                               left: 10,
                               right: 10,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.9), // Semi-transparent background
-                                  borderRadius: BorderRadius.circular(10), // Optional rounded corners
+                                  color: Colors.white.withOpacity(0.9),
+                                  borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black.withOpacity(0.2),
@@ -275,25 +272,51 @@ class _HomeScreenState extends State<HomeScreen> {
                                   itemCount: _placesList.length,
                                   itemBuilder: (context, index) {
                                     return ListTile(
-                                      title: Text(_placesList[index]['description'],
-                                               style: TextStyle(color: Colors.black54)),
-                                      onTap: () async{
+                                      title: Text(
+                                        _placesList[index]['description'],
+                                        style: TextStyle(color: Colors.black54),
+                                      ),
+                                      onTap: () async {
 
-                                        print("Selected location: ${_placesList[index]['description']}");
-                                        _searchController.text = _placesList[index]['description'];
-                                        List<Location> locations= await locationFromAddress(_placesList[index]['description']);
-                                        print(locations.last.latitude);
-                                        print(locations.last.longitude);
-                                        setState(() {
-                                          _placesList.clear();
-                                        });
+                                        List<Location> locations = await locationFromAddress(
+                                          _placesList[index]['description'],
+                                        );
+                                        if (locations.isNotEmpty) {
+
+                                          _searchController.text = _placesList[index]['description'];
+
+                                          Location selectedLocation = locations.first;
+
+                                          final GoogleMapController mapController = await _controller.future;
+                                          mapController.animateCamera(
+                                            CameraUpdate.newCameraPosition(
+                                              CameraPosition(
+                                                target: LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                                                zoom: 10,
+                                              ),
+                                            ),
+                                          );
+                                          Provider.of<MapState>(context, listen: false).updateCircle(
+                                            LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                                          );
+
+                                          Provider.of<LocationState>(context, listen: false).updateSelectedLocation(
+                                            LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                                          );
+
+                                          setState(() {
+                                            _searchController.clear();
+                                            _placesList.clear();
+                                            _sessionToken = "";
+                                          });
+                                        }
                                       },
+
                                     );
                                   },
                                 ),
                               ),
-                            ), //list of address
-
+                            ),
                           Positioned(
                             bottom: 10,
                             left: 10,
@@ -306,62 +329,38 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: const Icon(
                                 Icons.fullscreen,
                                 color: Colors.blueAccent,
-                              ), // Smaller button size
+                              ),
                             ),
-                          ), // full map button
+                          ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Consumer<LocationState>(
-                      builder: (context, locationState, child) {
-                        if (locationState.selectedLocation != null) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Selected Location:",
-                                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold,color: Color(0xFFFFFFFF)),
-                              ),
-                              const SizedBox(height: 5),
-                              const Text(
-                                "Latitude:",
-                                style: TextStyle(fontSize: 20,
-                                  color: Color(0xFFFFFFFF
-                                  ),),),
-                              Container(
-                                color: Colors.black12,
-                                child: Center(
-                                  child: Text(
-                                    locationState.selectedLocation!.latitude.toStringAsFixed(6),
-                                    style: const TextStyle(fontSize: 20,color: Color(0xFFFFFFFF)),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              const Text(
-                                "Longitude:",
-                                style: TextStyle(fontSize: 20,color: Color(0xFFFFFFFF)),
-                              ),
-                              Container(
-                                color: Colors.black12,
-                                child: Center(
-                                  child: Text(
-                                    locationState.selectedLocation!.longitude.toStringAsFixed(6),
-                                    style: const TextStyle(fontSize: 20,color: Color(0xFFFFFFFF)),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          return const Text(
-                            "Tap on the map to select a location.",
-                            style: TextStyle(fontSize: 26, color: Colors.black12),
-                          );
-                        }
-                      },
-                    ),
+                    if (locationState.selectedLocation != null)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Selected Location:",
+                            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF)),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            "Latitude: ${locationState.selectedLocation!.latitude.toStringAsFixed(6)}",
+                            style: const TextStyle(fontSize: 20, color: Color(0xFFFFFFFF)),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            "Longitude: ${locationState.selectedLocation!.longitude.toStringAsFixed(6)}",
+                            style: const TextStyle(fontSize: 20, color: Color(0xFFFFFFFF)),
+                          ),
+                        ],
+                      )
+                    else
+                      const Text(
+                        "Tap on the map to select a location.",
+                        style: TextStyle(fontSize: 26, color: Colors.black12),
+                      ),
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -370,7 +369,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-
     );
   }
+
 }

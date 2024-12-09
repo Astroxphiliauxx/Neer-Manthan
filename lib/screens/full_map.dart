@@ -154,12 +154,6 @@ class _FullScreenMapState extends State<FullScreenMap> {
                         title: Text(_placesList[index]['description']), onTap: () async {
                         print("Selected location: ${_placesList[index]['description']}");
                         _searchController.text = _placesList[index]['description'];
-                        List<Location> locations= await locationFromAddress(_placesList[index]['description']);
-                        print(locations.last.latitude.toString());
-                        print(locations.last.longitude.toString());
-
-
-
                       },
                       );
                     },
