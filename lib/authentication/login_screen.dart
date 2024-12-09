@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_map/common_widgets/custom_bg.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
-        final url = Uri.parse('https://example.com/api/login'); // Replace with actual URL
+        final url = Uri.parse('https://example.com/api/login');
         final response = await http.post(
           url,
           headers: {'Content-Type': 'application/json'},
@@ -63,103 +64,94 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 200, left: 10, right: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Log in",
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF1E6091),
-                  ),
-                ),
-                const SizedBox(height: 34),
-                const Text(
-                  'Email address',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF1E6091),
-                  ),
-                ),
-                CustomTextFormField(
-                  controller: emailController,
-                  labelText: "helloworld@gmail.com",
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter your email";
-                    } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                        .hasMatch(value)) {
-                      return "Enter a valid email address";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 25),
-                const Text(
-                  'Password',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF1E6091),
-                  ),
-                ),
-                CustomTextFormField(
-                  controller: passwordController,
-                  labelText: " ......",
-                  keyboardType: TextInputType.visiblePassword,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter a password";
-                    } else if (value.length < 8) {
-                      return "Password must be at least 8 characters long";
-                    }
-                    return null;
-                  },
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                     Navigator.pushNamed(context, '/forgotPassword');
-                    },
-                    child: const Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: Color(0xFF1E6091)),
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          custom_bg(),
+        SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 250, left: 10, right: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Log in",
+                    style: TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFFFFFFFF),
                     ),
                   ),
-                ),
-                const SizedBox(height: 70),
-                isLoading
-                    ?  CircularProgressIndicator()
-                    : Custombutton(text: 'Log in',onPressed: (){
-                      Navigator.pushNamed(context, '/home');
-                },),
-                const SizedBox(height: 15),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed((context), '/signUp');
-                      // Navigate to Sign Up Screen
+                  const SizedBox(height: 34),
+
+                  CustomTextFormField(
+                    controller: emailController,
+                    labelText: "Email address",
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter your email";
+                      } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                          .hasMatch(value)) {
+                        return "Enter a valid email address";
+                      }
+                      return null;
                     },
-                    child: const Text(
-                      "Don't have an account? Sign Up",
-                      style: TextStyle(color: Color(0xFF1E6091)),
+                  ),
+                  const SizedBox(height: 25),
+                  CustomTextFormField(
+                    controller: passwordController,
+                    labelText: "Password",
+                    keyboardType: TextInputType.visiblePassword,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter a password";
+                      } else if (value.length < 8) {
+                        return "Password must be at least 8 characters long";
+                      }
+                      return null;
+                    },
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                       Navigator.pushNamed(context, '/forgotPassword');
+                      },
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(color: Color(0xFFFFFFFF)),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 50),
+                  isLoading
+                      ?  CircularProgressIndicator()
+                      : Custombutton(text: 'Log in',onPressed: (){
+                        Navigator.pushNamed(context, '/home');
+                  },),
+                  const SizedBox(height: 15),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed((context), '/signUp');
+                        // Navigate to Sign Up Screen
+                      },
+                      child: const Text(
+                        "Don't have an account? Sign Up",
+                        style: TextStyle(color: Color(0xFFFFFFFF)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
+        ],
       ),
     );
   }
