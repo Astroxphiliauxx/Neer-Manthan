@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
-        final url = Uri.parse('https://example.com/api/login'); // Replace with actual URL
+        final url = Uri.parse('https://example.com/api/login');
         final response = await http.post(
           url,
           headers: {'Content-Type': 'application/json'},
@@ -64,6 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           custom_bg(),

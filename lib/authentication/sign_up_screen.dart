@@ -76,6 +76,8 @@ class _signUpScreenState extends State<signUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+
       body: Stack(
         children: [
           custom_bg(),
@@ -93,7 +95,7 @@ class _signUpScreenState extends State<signUpScreen> {
                       style: TextStyle(
                         fontSize: 35,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF1E6091),
+                        color: Color(0xFFFFFFFF),
                       ),
                     ),
                     const SizedBox(height: 31),
@@ -104,6 +106,9 @@ class _signUpScreenState extends State<signUpScreen> {
                       labelText: "Phone No.",
                       onChanged: (value){},
                       keyboardType: TextInputType.number,
+                      textStyle: TextStyle(
+                        color: Color(0xFFFFFFFF),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Please enter 10 digit Phone Number";
@@ -120,6 +125,9 @@ class _signUpScreenState extends State<signUpScreen> {
                       controller: emailController,
                       labelText: "Email",
                       keyboardType: TextInputType.emailAddress,
+                      textStyle: TextStyle(
+                        color: Color(0xFFFFFFFF),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Please enter your email";
@@ -137,6 +145,9 @@ class _signUpScreenState extends State<signUpScreen> {
                       controller: passwordController,
                       obscureText: _isObscured,
                       labelText: "Password",
+                      textStyle: TextStyle(
+                        color: Color(0xFFFFFFFF),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Please enter a password";
@@ -154,6 +165,9 @@ class _signUpScreenState extends State<signUpScreen> {
                       controller: confirmPasswordController,
                       obscureText: _isObscured,
                       labelText: "Confirm Password",
+                      textStyle: TextStyle(
+                        color: Color(0xFFFFFFFF),
+                      ),
                       suffixIcon: IconButton(
                         onPressed: _togglePasswordVisibility,
                         icon: _isObscured
