@@ -9,7 +9,9 @@ import 'package:flutter_map/screens/full_map.dart';
 import 'package:flutter_map/provider/map_provider/location_provider.dart';
 import 'package:uuid/uuid.dart';
 import '../provider/map_provider/circle_outline_map_provider.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_map/utils/place_suggestions.dart';
+
+import '../utils/place_suggestions.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -40,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void onChange() {
+  void onChange() async {
     if (_searchController.text.isEmpty) {
       setState(() {
         _placesList.clear();
@@ -54,31 +56,16 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
 
-    getSuggestion(_searchController.text);
-  }
+    final apiKey = "AIzaSyCvv6_VkZFnr7VKmX6lkF9-wOCLPPd5-7o"; // Your API key
+    final suggestions = await getSuggestion(
+      input: _searchController.text,
+      sessionToken: _sessionToken,
+      apiKey: apiKey,
+    );
 
-
-  void getSuggestion(String input) async{
-    String kPLACES_API_KEY= "AIzaSyCvv6_VkZFnr7VKmX6lkF9-wOCLPPd5-7o";
-    String baseURL ='https://maps.googleapis.com/maps/api/place/autocomplete/json';
-
-    String request = '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
-
-    try {
-      var response = await http.get(Uri.parse(request));
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        setState(() {
-          _placesList = jsonDecode(response.body)['predictions'];
-        });
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
+    setState(() {
+      _placesList = suggestions;
+    });
   }
 
   @override
