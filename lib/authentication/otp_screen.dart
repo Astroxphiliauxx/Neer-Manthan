@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/common_widgets/CustomButton.dart';
+import 'package:flutter_map/common_widgets/custom_button.dart';
 import 'package:pinput/pinput.dart';
 
-class otpScreen extends StatefulWidget {
-  const otpScreen({super.key});
+class OtpScreen extends StatefulWidget {
+  const OtpScreen({super.key});
 
   @override
-  State<otpScreen> createState() => _otpScreenState();
+  State<OtpScreen> createState() => _OtpScreenState();
 }
 
-class _otpScreenState extends State<otpScreen> {
+class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,14 +139,9 @@ class _otpScreenState extends State<otpScreen> {
                         fontSize: 14,
                         color:Color(0xFFFFFFFF)
                       ),),
-                      ),
-
+                      )
                     ],
-                  ),
-                  Custombutton(text: 'Verify',onPressed: (){
-
-                  },)
-
+                  )
                 ],
               ),
             ),
