@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/authentication/otp_screen.dart';
 import 'package:flutter_map/common_widgets/custom_bg.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -50,22 +51,21 @@ class _signUpScreenState extends State<signUpScreen> {
           headers: {'Content-Type': 'application/json'},
           body: body,
         );
-
         print("Response received: ${response.statusCode}, ${response.body}");
         if (response.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Sign-Up Successful!")), );
                 //save id in sharedpref
-              final data = jsonDecode(response.body);
-              //get userid
-               final userId = data['id'];
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-               await prefs.setInt('userId', userId);
-               //Navigate to log in screen
-           Navigator.push(context,  MaterialPageRoute(builder: (context) => LoginScreen()),
+          final data = jsonDecode(response.body);
+// Get userId
+          final userId = data['id']?.toString(); // Ensure it's stored as a string
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('userId', userId!);
+
+          //Navigate to log in screen
+           Navigator.push(context,  MaterialPageRoute(builder: (context) => OtpScreen()),
            );
 
-            
 
           // Navigate to login or home screen
         } else if (response.statusCode == 400) {
@@ -127,7 +127,6 @@ class _signUpScreenState extends State<signUpScreen> {
                         }
                         return null;
                       },
-
                     ),
 
                     const SizedBox(height: 16),
