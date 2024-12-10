@@ -162,52 +162,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 34),
-                  const Text(
-                    'Phone number',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFFFFFFFF),
-                    ),
-                  ),
-                  CustomTextFormField(
-                    controller: phoneController,
-                    labelText: "Phone No.",
-                    onChanged: (value){},
-                    keyboardType: TextInputType.number,
-                    textStyle: TextStyle(
-                      color: Color(0xFFFFFFFF),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter 10 digit Phone Number";
-                      }
-                      return null;
-                    },
+                  
 
-                  ),
-                  const SizedBox(height: 25),
-                  const Text(
-                    'Password',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFFFFFFFF),
-                    ),
-                  ),
-                  CustomTextFormField(
-                    controller: passwordController,
-                    labelText: " ......",
-                    keyboardType: TextInputType.visiblePassword,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter a password";
-                      } else if (value.length < 8) {
-                        return "Password must be at least 8 characters long";
-                      }
-                      return null;
-                    },
-                  ),
+                 const Text(
+                  'Phone number',
+                  style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFFFFFFFF),
+                 ),
+                   ),
+CustomTextFormField(
+  controller: phoneController,
+  labelText: "Phone No.",
+  onChanged: (value) {},
+  keyboardType: TextInputType.number,
+  textStyle: const TextStyle(
+    color: Color(0xFFFFFFFF),
+  ),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return "Please enter 10 digit Phone Number";
+    }
+    return null;
+  },
+),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
