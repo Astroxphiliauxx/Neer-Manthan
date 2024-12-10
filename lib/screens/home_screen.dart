@@ -356,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       } else {
                         return const Text(
                           "Tap on the map to select a location.",
-                          style: TextStyle(fontSize: 26, color: Colors.black12),
+                          style: TextStyle(fontSize: 26, color: Colors.white),
                         );
                       }
                     },
