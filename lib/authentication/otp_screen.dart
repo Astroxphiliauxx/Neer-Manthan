@@ -3,7 +3,8 @@ import 'package:flutter_map/common_widgets/custom_button.dart';
 import 'package:pinput/pinput.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  final int?id;
+  const OtpScreen({super.key, this.id});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -69,9 +70,9 @@ class _OtpScreenState extends State<OtpScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const Text(
-                    '+91276583639',
-                    style: TextStyle(
+                  Text(
+                    widget.id as String,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Color(0xB3FFFFFF),

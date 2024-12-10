@@ -43,6 +43,7 @@ dependencies:
   pinput: ^5.0.0
   uuid:
   geocoding:
+  shared_preferences: ^2.3.3
 
 
 

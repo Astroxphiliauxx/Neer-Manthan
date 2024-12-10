@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/common_widgets/custom_bg.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common_widgets/custom_button.dart';
 import '../common_widgets/custom_text_form.dart';
+import 'login_screen.dart';
 
 class signUpScreen extends StatefulWidget {
   @override
@@ -32,8 +34,8 @@ class _signUpScreenState extends State<signUpScreen> {
       setState(() {
         isLoading = true;
       });
-
-      final url = Uri.parse("http://192.168.242.132:8000/user/");
+      // http://192.168.242.132:8000/user/
+      final url = Uri.parse("http://10.0.2.2:8000/user/");
       final body = jsonEncode({
         'phone_number': phoneNumberController.text,
         'email': emailController.text,
@@ -52,8 +54,19 @@ class _signUpScreenState extends State<signUpScreen> {
         print("Response received: ${response.statusCode}, ${response.body}");
         if (response.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Sign-Up Successful!")),
-          );
+            const SnackBar(content: Text("Sign-Up Successful!")), );
+                //save id in sharedpref
+              final data = jsonDecode(response.body);
+              //get userid
+               final userId = data['id'];
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+               await prefs.setInt('userId', userId);
+               //Navigate to log in screen
+           Navigator.push(context,  MaterialPageRoute(builder: (context) => LoginScreen()),
+           );
+
+            
+
           // Navigate to login or home screen
         } else if (response.statusCode == 400) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -77,7 +90,6 @@ class _signUpScreenState extends State<signUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-
       body: Stack(
         children: [
           custom_bg(),
