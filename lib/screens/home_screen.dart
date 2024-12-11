@@ -11,8 +11,6 @@ import 'package:uuid/uuid.dart';
 import '../provider/map_provider/circle_outline_map_provider.dart';
 import 'package:flutter_map/utils/place_suggestions.dart';
 
-import '../utils/place_suggestions.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -264,40 +262,45 @@ class _HomeScreenState extends State<HomeScreen> {
                                         style: TextStyle(color: Colors.black54),
                                       ),
                                       onTap: () async {
+                                        try {
+                                          List<Location> locations = await locationFromAddress(
+                                            _placesList[index]['description'],
+                                          );
+                                          if (locations.isNotEmpty) {
+                                            _searchController.text = _placesList[index]['description'];
 
-                                        List<Location> locations = await locationFromAddress(
-                                          _placesList[index]['description'],
-                                        );
-                                        if (locations.isNotEmpty) {
+                                            Location selectedLocation = locations.first;
 
-                                          _searchController.text = _placesList[index]['description'];
-
-                                          Location selectedLocation = locations.first;
-
-                                          final GoogleMapController mapController = await _controller.future;
-                                          mapController.animateCamera(
-                                            CameraUpdate.newCameraPosition(
-                                              CameraPosition(
-                                                target: LatLng(selectedLocation.latitude, selectedLocation.longitude),
-                                                zoom: 10,
+                                            final GoogleMapController mapController = await _controller.future;
+                                            await mapController.animateCamera(
+                                              CameraUpdate.newCameraPosition(
+                                                CameraPosition(
+                                                  target: LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                                                  zoom: 10,
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                          Provider.of<MapState>(context, listen: false).updateCircle(
-                                            LatLng(selectedLocation.latitude, selectedLocation.longitude),
-                                          );
+                                            );
 
-                                          Provider.of<LocationState>(context, listen: false).updateSelectedLocation(
-                                            LatLng(selectedLocation.latitude, selectedLocation.longitude),
-                                          );
+                                            Provider.of<MapState>(context, listen: false).updateCircle(
+                                              LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                                            );
 
-                                          setState(() {
-                                            _searchController.clear();
-                                            _placesList.clear();
-                                            _sessionToken = "";
-                                          });
+                                            Provider.of<LocationState>(context, listen: false).updateSelectedLocation(
+                                              LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                                            );
+
+                                            // Clear suggestions and reset session token
+                                            setState(() {
+                                              _placesList.clear();
+                                              _searchController.clear();
+                                              _sessionToken = "";
+                                            });
+                                          }
+                                        } catch (e) {
+                                          print("Error handling suggestion tap: $e");
                                         }
                                       },
+
 
                                     );
                                   },
