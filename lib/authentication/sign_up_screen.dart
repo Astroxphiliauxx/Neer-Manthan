@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/authentication/otp_screen.dart';
 import 'package:flutter_map/common_widgets/custom_bg.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -50,22 +51,24 @@ class _signUpScreenState extends State<signUpScreen> {
           headers: {'Content-Type': 'application/json'},
           body: body,
         );
-
         print("Response received: ${response.statusCode}, ${response.body}");
         if (response.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Sign-Up Successful!")), );
                 //save id in sharedpref
-              final data = jsonDecode(response.body);
-              //get userid
-               final userId = data['id'];
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-               await prefs.setInt('userId', userId);
-               //Navigate to log in screen
-           Navigator.push(context,  MaterialPageRoute(builder: (context) => LoginScreen()),
-           );
+          final data = jsonDecode(response.body);
+// Get userId
+//           final userId = data['id']; // Ensure it's stored as a string
+//           final prefs = await SharedPreferences.getInstance();
+//           await prefs.setInt('userId', userId);
+          // Navigate to OTP screen after signup
+          final userId = data['id'];
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setInt('userId', userId);
 
-            
+          //Navigate to log in screen
+           Navigator.push(context,  MaterialPageRoute(builder: (context) => OtpScreen()),
+           );
 
           // Navigate to login or home screen
         } else if (response.statusCode == 400) {
@@ -94,7 +97,7 @@ class _signUpScreenState extends State<signUpScreen> {
         children: [
           custom_bg(),
          Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(left:16.0,right: 16.0,top:40,bottom: 16),
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -127,7 +130,6 @@ class _signUpScreenState extends State<signUpScreen> {
                         }
                         return null;
                       },
-
                     ),
 
                     const SizedBox(height: 16),
@@ -213,7 +215,10 @@ class _signUpScreenState extends State<signUpScreen> {
                           onPressed: () {
                             Navigator.pushNamed(context, '/login');
                           },
-                          child: const Text('Already have an account? Log in'),
+                          child: const Text('Already have an account? Log in',style: TextStyle(
+                            fontSize: 17,
+                            color:Color(0xFFFFFFFF),
+                          ),),
                         ),
                         TextButton(
                           onPressed: () {
@@ -222,8 +227,8 @@ class _signUpScreenState extends State<signUpScreen> {
                           child: const Text(
                             'Terms and conditions',
                             style: TextStyle(
-                              color: Color(0xFF184E77),
-                              fontSize: 16,
+                              color: Colors.blueAccent,
+                              fontSize: 17,
                             ),
                           ),
                         ),
