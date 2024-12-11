@@ -70,7 +70,6 @@ class _signUpScreenState extends State<signUpScreen> {
            Navigator.push(context,  MaterialPageRoute(builder: (context) => OtpScreen()),
            );
 
-
           // Navigate to login or home screen
         } else if (response.statusCode == 400) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -98,7 +97,7 @@ class _signUpScreenState extends State<signUpScreen> {
         children: [
           custom_bg(),
          Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(left:16.0,right: 16.0,top:40,bottom: 16),
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -216,7 +215,10 @@ class _signUpScreenState extends State<signUpScreen> {
                           onPressed: () {
                             Navigator.pushNamed(context, '/login');
                           },
-                          child: const Text('Already have an account? Log in'),
+                          child: const Text('Already have an account? Log in',style: TextStyle(
+                            fontSize: 17,
+                            color:Color(0xFFFFFFFF),
+                          ),),
                         ),
                         TextButton(
                           onPressed: () {
@@ -225,8 +227,8 @@ class _signUpScreenState extends State<signUpScreen> {
                           child: const Text(
                             'Terms and conditions',
                             style: TextStyle(
-                              color: Color(0xFF184E77),
-                              fontSize: 16,
+                              color: Colors.blueAccent,
+                              fontSize: 17,
                             ),
                           ),
                         ),

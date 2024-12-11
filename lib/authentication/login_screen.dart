@@ -93,14 +93,14 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Form(
               key: _formKey,
               child: Padding(
-                padding: const EdgeInsets.only(top: 250, left: 10, right: 10),
+                padding: const EdgeInsets.only(top:300, left: 10, right: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       "Log in",
                       style: TextStyle(
-                        fontSize: 35,
+                        fontSize: 45,
                         fontWeight: FontWeight.w800,
                         color: Color(0xFFFFFFFF),
                       ),
@@ -154,10 +154,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         child: const Text(
                           "Don't have an account? Sign Up",
-                          style: TextStyle(color: Color(0xFFFFFFFF)),
+                          style: TextStyle(
+                            color: Color(0xFFFFFFFF),
+                            fontSize: 18
+                          )),
                         ),
                       ),
-                    ),
+
                   ],
                 ),
               ),
