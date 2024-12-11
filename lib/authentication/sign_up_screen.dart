@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common_widgets/custom_button.dart';
 import '../common_widgets/custom_text_form.dart';
-import 'login_screen.dart';
 
 class signUpScreen extends StatefulWidget {
   @override
