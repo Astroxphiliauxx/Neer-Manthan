@@ -58,9 +58,13 @@ class _signUpScreenState extends State<signUpScreen> {
                 //save id in sharedpref
           final data = jsonDecode(response.body);
 // Get userId
-          final userId = data['id']?.toString(); // Ensure it's stored as a string
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('userId', userId!);
+//           final userId = data['id']; // Ensure it's stored as a string
+//           final prefs = await SharedPreferences.getInstance();
+//           await prefs.setInt('userId', userId);
+          // Navigate to OTP screen after signup
+          final userId = data['id'];
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setInt('userId', userId);
 
           //Navigate to log in screen
            Navigator.push(context,  MaterialPageRoute(builder: (context) => OtpScreen()),
