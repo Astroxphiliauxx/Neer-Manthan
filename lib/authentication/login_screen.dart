@@ -20,29 +20,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   bool isLoading = false;
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadUserId();
-  // }
-  //
-  // Future<void> _loadUserId() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     userId = prefs.getInt('userId');
-  //   });
-  // }
-  //
-  // Future<void> login() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     setState(() {
-  //       isLoading = true;
-  //     });
+
   Future<void> login() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -51,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Prepare the request body
       final body = jsonEncode({
-        'phone_number': phoneController.text,
+        'phone_number': phoneNumberController.text,
         'password': passwordController.text,
       });
 
@@ -100,44 +82,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  //     final body = jsonEncode({
-  //       'phone_number': phoneController.text,
-  //       'password': passwordController.text,
-  //     });
-  //
-  //     try {
-  //       final url = Uri.parse("http://10.0.2.2:8000/user/login/");
-  //       final response = await http.post(
-  //         url,
-  //         headers: {'Content-Type': 'application/json'},
-  //         body: body,);
-  //       print(response.body);
-  //
-  //       if (response.statusCode == 201) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text("Login Successful!")),);
-  //         //Navigate to otp-verify screen
-  //         Navigator.push(context, MaterialPageRoute(builder: (context)=>OtpScreen(id: userId!)));
-  //
-  //       } else {
-  //         print(response.statusCode);
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text("Login Failed!")),
-  //         );
-  //       }
-  //     } catch (error) {
-  //       print('Error occurred: $error');
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text("An error occurred!")),
-  //       );
-  //     } finally {
-  //       setState(() {
-  //         isLoading = false;
-  //       });
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,85 +89,83 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           custom_bg(),
-        SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 250, left: 10, right: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Log in",
-                    style: TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xFFFFFFFF),
+          SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.only(top:300, left: 10, right: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Log in",
+                      style: TextStyle(
+                        fontSize: 45,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFFFFFFFF),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 34),
-                  
+                    const SizedBox(height: 34),
 
-                 const Text(
-                  'Phone number',
-                  style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFFFFFFFF),
-                 ),
-                   ),
-CustomTextFormField(
-  controller: phoneController,
-  labelText: "Phone No.",
-  onChanged: (value) {},
-  keyboardType: TextInputType.number,
-  textStyle: const TextStyle(
-    color: Color(0xFFFFFFFF),
-  ),
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return "Please enter 10 digit Phone Number";
-    }
-    return null;
-  },
-),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                       Navigator.pushNamed(context, '/forgotPassword');
-                      },
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(color: Color(0xFFFFFFFF)),
+                    CustomTextFormField(
+                      controller: phoneNumberController,
+                      labelText: "Phone No.",
+                      onChanged: (value){},
+                      keyboardType: TextInputType.number,
+                      textStyle: TextStyle(
+                        color: Color(0xFFFFFFFF),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 50),
-                  isLoading
-                      ?  CircularProgressIndicator()
-                      : Custombutton(text: 'Log in',onPressed: (){
-                              login();
-                  },),
-                  const SizedBox(height: 15),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed((context), '/signUp');
-                        // Navigate to Sign Up Screen
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter 10 digit Phone Number";
+                        }
+                        return null;
                       },
-                      child: const Text(
-                        "Don't have an account? Sign Up",
-                        style: TextStyle(color: Color(0xFFFFFFFF)),
-                      ),
+
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 25),
+                    CustomTextFormField(
+                      controller: passwordController,
+                      labelText: "Password",
+                      keyboardType: TextInputType.visiblePassword,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter a password";
+                        } else if (value.length < 8) {
+                          return "Password must be at least 8 characters long";
+                        }
+                        return null;
+                      },
+                    ),
+
+                    const SizedBox(height: 50),
+                    isLoading
+                        ?  CircularProgressIndicator()
+                        : Custombutton(text: 'Log in',onPressed: (){
+                      Navigator.pushNamed(context, '/home');
+                    },),
+                    const SizedBox(height: 15),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed((context), '/signUp');
+                          // Navigate to Sign Up Screen
+                        },
+                        child: const Text(
+                          "Don't have an account? Sign Up",
+                          style: TextStyle(
+                            color: Color(0xFFFFFFFF),
+                            fontSize: 18
+                          )),
+                        ),
+                      ),
+
+                  ],
+                ),
               ),
             ),
           ),
-        ),
         ],
       ),
     );
