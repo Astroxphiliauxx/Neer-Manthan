@@ -5,11 +5,14 @@ import 'package:flutter_map/provider/map_provider/circle_outline_map_provider.da
 import 'package:flutter_map/provider/map_provider/location_provider.dart';
 import 'package:flutter_map/provider/theme_provider.dart';
 import 'package:flutter_map/screens/full_map.dart';
+import 'package:flutter_map/screens/home2.dart';
+import 'package:flutter_map/screens/home_screen_agra.dart';
 import 'package:flutter_map/screens/route_not_found_screen.dart';
 import 'package:flutter_map/screens/splash_screen.dart';
 import 'package:flutter_map/screens/theme_selector.dart';
 import 'package:provider/provider.dart';
 import 'authentication/sign_up_screen.dart';
+import 'common_widgets/extra.dart';
 import 'screens/home_screen.dart';
 
 void main() {
@@ -59,13 +62,16 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: '/',
           routes: {
-              '/':(context)=> splashScreen(),
+
+            '/':(context)=> HomeScreenAgra(),
               '/signUp':(context)=>signUpScreen(),
               '/login':(context)=>const LoginScreen(),
-              '/home':(context)=>const HomeScreen(),
+              '/home':(context)=>const HomeScreenAgra(),
               '/theme': (context)=> const ThemeSelector(),
               '/fullMap': (context)=> const FullScreenMap(),
                '/otp':(context)=>const OtpScreen(),
+              '/extra':(context)=>DistrictWellCodeApp2(),
+            '/home2':(context)=>DistrictWellCodeApp(),
 
           },
           onUnknownRoute: (settings) => MaterialPageRoute(

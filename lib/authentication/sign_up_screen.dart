@@ -34,8 +34,8 @@ class _signUpScreenState extends State<signUpScreen> {
       setState(() {
         isLoading = true;
       });
-      // http://192.168.242.132:8000/user/
-      final url = Uri.parse("http://10.0.2.2:8000/user/");
+      // http:// 192.168.14.116:8000/user/
+      final url = Uri.parse("http://192.168.14.116:8000/user/");
       final body = jsonEncode({
         'phone_number': phoneNumberController.text,
         'email': emailController.text,

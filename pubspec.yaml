@@ -44,6 +44,9 @@ dependencies:
   uuid:
   geocoding:
   shared_preferences: ^2.3.3
+  geolocator:
+  fl_chart:
+  chart_sparkline:
 
 
 

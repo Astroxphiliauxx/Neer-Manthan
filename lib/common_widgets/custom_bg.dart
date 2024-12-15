@@ -13,7 +13,7 @@ class custom_bg extends StatelessWidget {
 
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/RECTANGLE.jpg"), // Replace with your image asset
+          image: AssetImage("assets/background.png"), // Replace with your image asset
           fit: BoxFit.cover,
         ),
       ),

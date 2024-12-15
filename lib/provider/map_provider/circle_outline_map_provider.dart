@@ -12,7 +12,7 @@ class MapState with ChangeNotifier {
       Circle(
         circleId: const CircleId('highlighted_area'),
         center: position,
-        radius: 30000,
+        radius: 2000,
         strokeColor: Colors.red,
         strokeWidth: 3,
         fillColor: Colors.red.withOpacity(0.2),

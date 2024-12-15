@@ -8,6 +8,9 @@ import 'package:uuid/uuid.dart';
 import '../provider/map_provider/circle_outline_map_provider.dart';
 import 'package:http/http.dart' as http;
 
+import '../provider/map_provider/location_provider.dart';
+import '../utils/calculate_distance.dart';
+
 
 class FullScreenMap extends StatefulWidget {
   const FullScreenMap({super.key});
@@ -19,7 +22,7 @@ class FullScreenMap extends StatefulWidget {
 class _FullScreenMapState extends State<FullScreenMap> {
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _kGooglePlex = const CameraPosition(
-    target: LatLng(28.674777410675873, 77.50341320602973),
+    target: LatLng(27.1767, 78.0081),
     zoom: 10,
   );
 
@@ -29,6 +32,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
   String _SessionToken=  '112233';
 
   List<dynamic> _placesList= [];
+  final Set<Marker> _markers = {};
 
   @override
   void initState() {
@@ -37,6 +41,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
     _searchController.addListener((){
       onChange();
     });
+    _addStationMarkers();
   }
 
   void onChange(){
@@ -46,6 +51,28 @@ class _FullScreenMapState extends State<FullScreenMap> {
       });
     }
     getSuggestion(_searchController.text);
+  }
+
+  void _addStationMarkers() {
+    for (var station in stations) {
+      _markers.add(
+        Marker(
+          markerId: MarkerId(station['id'].toString()),
+          position: LatLng(
+            station['latitude'] is int
+                ? (station['latitude'] as int).toDouble()
+                : station['latitude'],
+            station['longitude'] is int
+                ? (station['longitude'] as int).toDouble()
+                : station['longitude'],
+          ),
+          infoWindow: InfoWindow(
+            title: station['name'],
+            snippet: "ID: ${station['id']}",
+          ),
+        ),
+      );
+    }
   }
 
   void getSuggestion(String input) async{
@@ -91,9 +118,18 @@ class _FullScreenMapState extends State<FullScreenMap> {
                   zoomControlsEnabled: true,
                   mapToolbarEnabled: true,
                   mapType: MapType.normal,
+                  markers: _markers,
                   circles: mapState.circles,
                   onTap: (LatLng position) {
+
                     mapState.updateCircle(position);
+
+                    // //LatLng nearestStation = findNearestStationLatLng(position);
+                    // double distance = calculateDistance(position, nearestStation);
+                    //
+                    // print("Nearest station is at ${distance.toStringAsFixed(2)} meters");
+                    // print('Nearest monitoring station is at: ${nearestStation.latitude}, ${nearestStation.longitude}');
+
                   },
                 );
               },
@@ -151,10 +187,46 @@ class _FullScreenMapState extends State<FullScreenMap> {
                     itemCount: _placesList.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(_placesList[index]['description']), onTap: () async {
-                        print("Selected location: ${_placesList[index]['description']}");
-                        _searchController.text = _placesList[index]['description'];
-                      },
+                        title: Text(_placesList[index]['description']),
+                        onTap: () async {
+                          try {
+                            List<Location> locations = await locationFromAddress(
+                              _placesList[index]['description'],
+                            );
+                            if (locations.isNotEmpty) {
+                              _searchController.text = _placesList[index]['description'];
+
+                              Location selectedLocation = locations.first;
+
+                              final GoogleMapController mapController = await _controller.future;
+                              await mapController.animateCamera(
+                                CameraUpdate.newCameraPosition(
+                                  CameraPosition(
+                                    target: LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                                    zoom: 10,
+                                  ),
+                                ),
+                              );
+
+                              Provider.of<MapState>(context, listen: false).updateCircle(
+                                LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                              );
+
+                              Provider.of<LocationState>(context, listen: false).updateSelectedLocation(
+                                LatLng(selectedLocation.latitude, selectedLocation.longitude),
+                              );
+
+                              setState(() {
+                                _placesList.clear();
+                                _searchController.clear();
+                                _SessionToken = "";
+                              });
+                            }
+                          } catch (e) {
+                            print("Error handling suggestion tap: $e");
+                          }
+                        },
+
                       );
                     },
                   ),

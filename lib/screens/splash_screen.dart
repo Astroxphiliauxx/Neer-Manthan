@@ -17,7 +17,7 @@ class _splashScreenState extends State<splashScreen> {
   void initState() {
 
     super.initState();
-    Timer(const Duration(seconds: 10),(){
+    Timer(const Duration(seconds: 6),(){
       Navigator.pushReplacementNamed(context,'/signUp');
     });
   }
@@ -34,39 +34,42 @@ class _splashScreenState extends State<splashScreen> {
               ),
             ),
           ),
-        Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height:160,
-                width:140,
-                child: Image.asset("assets/SEOLogo 1.jpg",fit: BoxFit.cover,),
-              ),
-              Container(
-                height:40,
-                width:140,
-                child: Image.asset("assets/BrandName.jpg",fit: BoxFit.fitWidth,),
-              ),
-              Container(
-                height:32,
-                width:140,
-                child: Image.asset("assets/step count.jpg",fit: BoxFit.fitWidth,),
-              ),
-              const SizedBox(
-                height:40,
-              ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height:160,
+                  width:140,
+                  child: Image.asset("assets/SEOLogo 1.png",fit: BoxFit.cover,),
+                ),
+                SizedBox(
+                  height:5,
+                ),
+                Container(
+                  height:90,
+                  width:150,
+                  child: Image.asset("assets/logo2.png",fit: BoxFit.fitWidth,),
+                ),
+                // Container(
+                //   height:32,
+                //   width:140,
+                //   child: Image.asset("assets/step count.jpg",fit: BoxFit.fitWidth,),
+                // ),
+                const SizedBox(
+                  height:35,
+                ),
 
-              //loading indicator
-              const SpinKitCircle(
-                color: Color(0xFFFFFFFF),
-                size: 100.0,
-              )
+                //loading indicator
+                const SpinKitCircle(
+                  color: Color(0xFFFFFFFF),
+                  size: 100.0,
+                )
 
-            ],
+              ],
+            ),
           ),
-        ),
-    ],
+        ],
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/common_widgets/custom_bg.dart';
 import 'package:geocoding/geocoding.dart';
@@ -10,25 +11,37 @@ import 'package:uuid/uuid.dart';
 import '../provider/map_provider/circle_outline_map_provider.dart';
 import 'package:flutter_map/utils/place_suggestions.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+import '../utils/calculate_distance.dart';
+import '../utils/calculate_distance_kerala.dart';
+import '../utils/nearestWell.dart';
+
+
+class HomeScreenAgra extends StatefulWidget {
+  const HomeScreenAgra({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreenAgra> createState() => _HomeScreenAgraState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenAgraState extends State<HomeScreenAgra> {
   final Completer<GoogleMapController> _controller = Completer();
   static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(28.674777410675873, 77.50341320602973),
-    zoom: 20,
+    target: LatLng(27.1767, 78.0081),
+    zoom: 10,
   );
 
   final TextEditingController _searchController = TextEditingController();
   var uuid = Uuid();
   late String _sessionToken=  "112233";
+  String? nearestWellId;
+  double? nearestWellLatitude;
+  double? nearestWellLongitude;
+  double? nearestWellDistance;
+  String nearestWellName = "";
+
 
   List<dynamic> _placesList= [];
+  final Set<Marker> _markers = {};
 
 
   @override
@@ -37,6 +50,29 @@ class _HomeScreenState extends State<HomeScreen> {
     _searchController.addListener((){
       onChange();
     });
+    _addStationMarkers();
+  }
+
+  void _addStationMarkers() {
+    for (var station in stations) {
+      _markers.add(
+        Marker(
+          markerId: MarkerId(station['id'].toString()),
+          position: LatLng(
+            station['latitude'] is int
+                ? (station['latitude'] as int).toDouble()
+                : station['latitude'],
+            station['longitude'] is int
+                ? (station['longitude'] as int).toDouble()
+                : station['longitude'],
+          ),
+          infoWindow: InfoWindow(
+            title: station['name'],
+            snippet: "ID: ${station['id']}",
+          ),
+        ),
+      );
+    }
   }
 
   void onChange() async {
@@ -53,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
 
-    final apiKey = "AIzaSyCvv6_VkZFnr7VKmX6lkF9-wOCLPPd5-7o"; // Your API key
+    final apiKey = "AIzaSyCvv6_VkZFnr7VKmX6lkF9-wOCLPPd5-7o";
     final suggestions = await getSuggestion(
       input: _searchController.text,
       sessionToken: _sessionToken,
@@ -75,7 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Aqua Predict'),
+        title: const Text('नीर मंथन',
+        style: TextStyle(fontSize: 30),),
         actions: [
           IconButton(
             icon: const Icon(Icons.person_2_outlined),
@@ -100,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icon(Icons.water_drop, size: 60, color: Colors.white),
                   SizedBox(height: 10),
                   Text(
-                    'Neer Manthan',
+                    'नीर मंथन',
                     style: TextStyle(fontSize: 24, color: Colors.white),
                   ),
                 ],
@@ -129,13 +166,21 @@ class _HomeScreenState extends State<HomeScreen> {
               title: const Text('Settings'),
               onTap: () {
                 Navigator.pushNamed((context), '/theme');
+
               },
             ),
             ListTile(
               leading: const Icon(Icons.home),
               title: const Text('WL AND RAINFALL'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pushNamed((context), '/extra');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Kerala Well Monitoring'),
+              onTap: () {
+                Navigator.pushNamed((context), '/home2');
               },
             ),
             const Divider(),
@@ -159,7 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Map Container
                     Container(
                       height: 500,
                       decoration: BoxDecoration(
@@ -188,11 +232,41 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               zoomControlsEnabled: true,
                               mapType: MapType.normal,
+                              markers: _markers,
                               circles: mapState.circles,
                               onTap: (LatLng position) {
+
                                 locationState.updateSelectedLocation(position);
                                 mapState.updateCircle(position);
+
+
+                                WellLocation nearestWell = findNearestStationLatLng(position);
+
+
+                                double distance = calculateDistance(position, nearestWell.latLng);
+
+
+                                setState(() {
+                                  nearestWellLatitude = nearestWell.latLng.latitude;
+                                  nearestWellLongitude = nearestWell.latLng.longitude;
+                                  nearestWellDistance = distance;
+                                  nearestWellId = stations.firstWhere(
+                                        (station) =>
+                                    station['latitude'] == nearestWell.latLng.latitude &&
+                                        station['longitude'] == nearestWell.latLng.longitude,
+                                    orElse: () => {},
+                                  )['id'].toString();
+                                  nearestWellName = nearestWell.name;
+                                });
+
+
+                                print("Nearest Well Name: $nearestWellName");
+                                print("Distance: ${nearestWellDistance?.toStringAsFixed(2)} meters");
+
+                                // Optionally, you can display the details in the UI as well
                               },
+
+
                             ),
                           ),
                           Positioned(
@@ -240,7 +314,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          // Place Suggestions List
                           if (_placesList.isNotEmpty)
                             Positioned(
                               top: 70,
@@ -307,7 +380,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         }
                                       },
 
-
                                     );
                                   },
                                 ),
@@ -355,9 +427,67 @@ class _HomeScreenState extends State<HomeScreen> {
                     else
                       const Text(
                         "Tap on the map to select a location.",
-                        style: TextStyle(fontSize: 26, color: Colors.black12),
+                        style: TextStyle(fontSize: 26, color: Colors.white),
                       ),
                     const SizedBox(height: 20),
+
+                    if (nearestWellDistance != null)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Nearest Monitoring Station:",
+                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                          ),
+                          Text(
+                            "ID: $nearestWellId",
+                            style: const TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                          Text(
+                            "Latitude: ${nearestWellLatitude?.toStringAsFixed(6)}",
+                            style: const TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                          Text(
+                            "Longitude: ${nearestWellLongitude?.toStringAsFixed(6)}",
+                            style: const TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                          Text(
+                            "Distance: ${nearestWellDistance?.toStringAsFixed(2)} meters",
+                            style: const TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    const SizedBox(height: 20),
+
+                    Positioned(
+                      bottom: 10,
+                      right: 10,  // Positioned to the right bottom corner
+                      child: FloatingActionButton(
+                        onPressed: () {
+
+                          if (nearestWellName.isNotEmpty) {
+                            Navigator.pushNamed(
+                              context,
+                              '/extra',
+                              arguments: {'nearestWellName': nearestWellName},
+                            );
+                          } else {
+                            // Optionally, you can show an alert or a message if nearestWellName is empty
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('No nearest well selected')),
+                            );
+                          }
+                        },
+                        backgroundColor: Colors.blueAccent,
+                        child: const Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+
+
+
                   ],
                 ),
               ),

@@ -65,7 +65,7 @@ class _OtpScreenState extends State<OtpScreen> {
     });
 
     try {
-      final url = Uri.parse("http://10.0.2.2:8000/user/$userId/verify_otp/");
+      final url = Uri.parse("http://192.168.14.116:8000/user/$userId/verify_otp/");
       final response = await http.patch(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -116,7 +116,7 @@ class _OtpScreenState extends State<OtpScreen> {
     });
 
     try {
-      final url = Uri.parse("http://10.0.2.2:8000/user/$userId/regenerate_otp/");
+      final url = Uri.parse("http://192.168.14.116:8000/user//$userId/regenerate_otp/");
       final response = await http.patch(
         url,
         headers: {'Content-Type': 'application/json'},
