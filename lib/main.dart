@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           routes: {
 
-            '/':(context)=> HomeScreenAgra(),
+            '/':(context)=> splashScreen(),
               '/signUp':(context)=>signUpScreen(),
               '/login':(context)=>const LoginScreen(),
               '/home':(context)=>const HomeScreenAgra(),
