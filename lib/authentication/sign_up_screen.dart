@@ -8,12 +8,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common_widgets/custom_button.dart';
 import '../common_widgets/custom_text_form.dart';
 
-class signUpScreen extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   @override
-  _signUpScreenState createState() => _signUpScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _signUpScreenState extends State<signUpScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
