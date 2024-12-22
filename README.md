@@ -14,7 +14,7 @@ PSID- 1696
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
-- 
+
 ## Introduction
 
 JAL-SHAKTI is a project aimed at predicting groundwater levels. This solution was developed as part of the "SMART INDIA HACKATHON-2024".
@@ -25,7 +25,7 @@ JAL-SHAKTI is a project aimed at predicting groundwater levels. This solution wa
 - Multi-platform is also supported
 - Easy setup and user-friendly interface
 - Customizable launch screen assets
-- 
+
 ## Installation
 
 To get started with the project, clone the repository and install the necessary dependencies.
@@ -38,3 +38,4 @@ cd Jal-Shakti
 ## Usage
 ## Contributing
 ## License
+
