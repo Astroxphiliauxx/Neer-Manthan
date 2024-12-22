@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/const/urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +33,7 @@ class _OtpScreenState extends State<OtpScreen> {
           userId = retrievedUserId;
         });
       } else {
-        // Handle the case where userId is missing in SharedPreferences
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("User ID not found. Please sign up again.")),
         );
@@ -65,7 +66,7 @@ class _OtpScreenState extends State<OtpScreen> {
     });
 
     try {
-      final url = Uri.parse("http://192.168.14.116:8000/user/$userId/verify_otp/");
+      final url = Uri.parse(AppConstants.otpUrl);
       final response = await http.patch(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -112,11 +113,11 @@ class _OtpScreenState extends State<OtpScreen> {
     }
     setState(() {
       isLoading = true;
-      otpCode = ""; // Clear previously entered OTP
+      otpCode = "";
     });
 
     try {
-      final url = Uri.parse("http://192.168.14.116:8000/user//$userId/regenerate_otp/");
+      final url = Uri.parse(AppConstants.reOtpUrl);
       final response = await http.patch(
         url,
         headers: {'Content-Type': 'application/json'},

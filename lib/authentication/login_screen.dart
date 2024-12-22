@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'package:flutter_map/authentication/otp_screen.dart';
 import 'package:flutter_map/common_widgets/custom_bg.dart';
+import 'package:flutter_map/const/urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,15 +32,14 @@ class _LoginScreenState extends State<LoginScreen> {
         isLoading = true;
       });
 
-      // Prepare the request body
       final body = jsonEncode({
         'phone_number': phoneNumberController.text,
         'password': passwordController.text,
       });
 
       try {
-        // Define the API URL
-        final url = Uri.parse("http://192.168.14.116:8000/user/login/");
+
+        final url = Uri.parse(AppConstants.loginUrl);
         final response = await http.post(
           url,
           headers: {'Content-Type': 'application/json'},
@@ -49,15 +49,13 @@ class _LoginScreenState extends State<LoginScreen> {
         print("Response Status Code: ${response.statusCode}");
         print("Response Body: ${response.body}");
 
-        // Handle response
+
         if (response.statusCode == 200 ) {
-          final responseData = jsonDecode(response.body);
 
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Login Successful!")),
           );
 
-          // Navigate to OTP screen
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const OtpScreen()),

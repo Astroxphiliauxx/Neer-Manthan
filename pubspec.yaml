@@ -47,6 +47,7 @@ dependencies:
   geolocator:
   fl_chart:
   chart_sparkline:
+  flutter_dotenv:
 
 
 

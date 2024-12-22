@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/authentication/otp_screen.dart';
 import 'package:flutter_map/common_widgets/custom_bg.dart';
+import 'package:flutter_map/const/urls.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,8 +35,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       setState(() {
         isLoading = true;
       });
-      // http:// 192.168.14.116:8000/user/
-      final url = Uri.parse("http://192.168.14.116:8000/user/");
+
+      final url = Uri.parse(AppConstants.signupUrl);
+
       final body = jsonEncode({
         'phone_number': phoneNumberController.text,
         'email': emailController.text,
@@ -65,11 +67,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           final prefs = await SharedPreferences.getInstance();
           await prefs.setInt('userId', userId);
 
-          //Navigate to log in screen
+
            Navigator.push(context,  MaterialPageRoute(builder: (context) => OtpScreen()),
            );
 
-          // Navigate to login or home screen
         } else if (response.statusCode == 400) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Sign-Up Failed: ${response.body}")),
