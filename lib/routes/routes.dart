@@ -8,13 +8,12 @@ import '../common_widgets/extra.dart';
 import '../screens/full_map.dart';
 import '../screens/home2.dart';
 import '../screens/home_screen_agra.dart';
-import '../screens/splash_screen.dart';
 import '../screens/theme_selector.dart';
 
 class Routes {
   static Map<String, WidgetBuilder> getRoutes() {
     return {
-      '/': (context) => SplashScreen(),
+      '/': (context) => HomeScreenAgra(),
       '/signUp': (context) => SignUpScreen(),
       '/login': (context) => const LoginScreen(),
       '/home': (context) => const HomeScreenAgra(),
