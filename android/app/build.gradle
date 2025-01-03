@@ -5,6 +5,9 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+apply plugin: "com.squareup.dotenv"
+
+
 android {
     namespace = "com.example.flutter_map"
     compileSdk = 34
@@ -28,6 +31,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        resValue "string", "google_api_key", dotenv['GOOGLE_MAPS_API_KEY'] ?: "YOUR_DEFAULT_KEY"
     }
 
     buildTypes {
@@ -41,4 +46,11 @@ android {
 
 flutter {
     source = "../.."
+}
+
+def secretsPropertiesFile = rootProject.file(".env")
+def secretsProperties = new Properties()
+
+if (secretsPropertiesFile.exists()) {
+    secretsProperties.load(new FileInputStream(secretsPropertiesFile))
 }

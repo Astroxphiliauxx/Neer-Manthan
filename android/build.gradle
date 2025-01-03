@@ -3,6 +3,10 @@ allprojects {
         google()
         mavenCentral()
     }
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.1.1"
+        classpath "com.squareup.gradle:gradle-dotenv-plugin:1.2"
+    }
 }
 
 rootProject.buildDir = "../build"
