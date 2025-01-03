@@ -1,6 +1,7 @@
 import 'package:chart_sparkline/chart_sparkline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/common_widgets/custom_bg.dart';
+import 'package:flutter_map/const/urls.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -10,9 +11,9 @@ class DistrictWellCodeApp2 extends StatefulWidget {
 }
 
 class _DistrictWellCodeApp2State extends State<DistrictWellCodeApp2> {
-  String? selectedDistrict = 'Agra'; // Set 'Agra' as default district
+  String? selectedDistrict = 'Agra';
   String? selectedWellCode;
-  String? wellCode; // Populate this dynamically as per district data
+  String? wellCode;
   TextEditingController monthController = TextEditingController();
   TextEditingController yearController = TextEditingController();
   double? PredictedValue;
@@ -43,7 +44,7 @@ class _DistrictWellCodeApp2State extends State<DistrictWellCodeApp2> {
     });
 
     try {
-      final url = Uri.parse("https://adsasd-zdbu.onrender.com/predict-agra");
+      final url = Uri.parse(AppConstants.predictionUrl);
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -82,8 +83,8 @@ class _DistrictWellCodeApp2State extends State<DistrictWellCodeApp2> {
 
   @override
   Widget build(BuildContext context) {
-    final Map arguments = ModalRoute.of(context)?.settings.arguments as Map;
-    final String? nearestWellName = arguments['nearestWellName'];
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final nearestWellName = args['nearestWellName'] ?? 'Unknown';
 
     return Scaffold(
       extendBodyBehindAppBar: true,
