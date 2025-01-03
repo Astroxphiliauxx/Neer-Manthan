@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_map/const/urls.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -77,7 +78,7 @@ class _DistrictWellCodeAppState extends State<DistrictWellCodeApp> {
     });
 
     try {
-      final url = Uri.parse("https://adsasd-zdbu.onrender.com/predict");
+      final url = Uri.parse(AppConstants.predictionUrl2);
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/common_widgets/custom_bg.dart';
+import 'package:flutter_map/const/urls.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
 
-    final apiKey = "AIzaSyCvv6_VkZFnr7VKmX6lkF9-wOCLPPd5-7o"; // Your API key
+    final apiKey = AppConstants.googleMapsApiKey; // Your API key
     final suggestions = await getSuggestion(
       input: _searchController.text,
       sessionToken: _sessionToken,

@@ -51,11 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   width:150,
                   child: Image.asset("assets/logo2.png",fit: BoxFit.fitWidth,),
                 ),
-                // Container(
-                //   height:32,
-                //   width:140,
-                //   child: Image.asset("assets/step count.jpg",fit: BoxFit.fitWidth,),
-                // ),
+
                 const SizedBox(
                   height:35,
                 ),

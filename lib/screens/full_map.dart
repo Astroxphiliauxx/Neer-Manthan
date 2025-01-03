@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/const/urls.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -76,10 +77,11 @@ class _FullScreenMapState extends State<FullScreenMap> {
   }
 
   void getSuggestion(String input) async{
-    String kPLACES_API_KEY= "AIzaSyCvv6_VkZFnr7VKmX6lkF9-wOCLPPd5-7o";
-    String baseURL ='https://maps.googleapis.com/maps/api/place/autocomplete/json';
 
-    String request = '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_SessionToken';
+    String GOOGLE_MAPS_API_KEY= AppConstants.googleMapsApiKey;
+    String baseURL =AppConstants.baseUrl;
+
+    String request = '$baseURL?input=$input&key=$GOOGLE_MAPS_API_KEY&sessiontoken=$_SessionToken';
 
     try {
       var response = await http.get(Uri.parse(request));
@@ -123,12 +125,6 @@ class _FullScreenMapState extends State<FullScreenMap> {
                   onTap: (LatLng position) {
 
                     mapState.updateCircle(position);
-
-                    // //LatLng nearestStation = findNearestStationLatLng(position);
-                    // double distance = calculateDistance(position, nearestStation);
-                    //
-                    // print("Nearest station is at ${distance.toStringAsFixed(2)} meters");
-                    // print('Nearest monitoring station is at: ${nearestStation.latitude}, ${nearestStation.longitude}');
 
                   },
                 );
