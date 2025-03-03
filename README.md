@@ -1,4 +1,4 @@
-# JAL-SHAKTI
+# Neer Manthan
 
 GROUND WATER LEVEL PREDICTOR
 
